@@ -583,7 +583,7 @@
       <div class="space-y-3">
         <div>
           <label class="text-[11px] font-mono text-slate-300 block mb-1">Firebase Realtime Database REST URL:</label>
-          <input type="url" id="input-firebase-url" placeholder="https://your-app-default-rtdb.firebaseio.com/live_result.json" class="w-full bg-brand-card border border-brand-border rounded-xl px-3 py-2 text-xs font-mono text-white placeholder-slate-600 focus:outline-none focus:border-brand-accent">
+          <input type="url" id="input-firebase-url" value="https://ffffff-6d58d-default-rtdb.firebaseio.com/live_result.json" placeholder="https://ffffff-6d58d-default-rtdb.firebaseio.com/live_result.json" class="w-full bg-brand-card border border-brand-border rounded-xl px-3 py-2 text-xs font-mono text-white placeholder-slate-600 focus:outline-none focus:border-brand-accent">
           <p class="text-[10px] text-slate-500 mt-1">ফায়ারবেস ডেটাবেসের URL-এর শেষে <code class="text-brand-accent font-mono">/live_result.json</code> যুক্ত করুন।</p>
         </div>
 
@@ -1421,10 +1421,25 @@
     // DIRECT FIREBASE ONLINE INTEGRATION & CLOUD ENGINE
     // ======================================================================
     const CloudSync = {
-      firebaseUrl: '',
+      firebaseUrl: 'https://ffffff-6d58d-default-rtdb.firebaseio.com/live_result.json',
       autoSync: true,
       lastSyncTime: null,
       isConnected: false,
+
+      normalizeUrl(rawUrl) {
+        if (!rawUrl) return '';
+        let u = rawUrl.trim().replace(/\/+$/, '');
+        if (!u) return '';
+        // If user provided just base domain or missing .json
+        if (!u.endsWith('.json')) {
+          if (u.endsWith('/live_result') || u.endsWith('live_result')) {
+            u = u + '.json';
+          } else {
+            u = u + '/live_result.json';
+          }
+        }
+        return u;
+      },
 
       init() {
         const input = document.getElementById('input-firebase-url');
@@ -1433,9 +1448,13 @@
         try {
           const savedUrl = localStorage.getItem('kolkata_firebase_url');
           if (savedUrl) {
-            this.firebaseUrl = savedUrl;
-            if (input) input.value = savedUrl;
+            this.firebaseUrl = this.normalizeUrl(savedUrl);
+          } else {
+            this.firebaseUrl = 'https://ffffff-6d58d-default-rtdb.firebaseio.com/live_result.json';
+            try { localStorage.setItem('kolkata_firebase_url', this.firebaseUrl); } catch(e) {}
           }
+          if (input) input.value = this.firebaseUrl;
+
           const savedAuto = localStorage.getItem('kolkata_auto_sync');
           if (savedAuto !== null && autoCheck) {
             this.autoSync = savedAuto === 'true';
@@ -1443,9 +1462,18 @@
           }
         } catch(e) {}
 
-        this.updateStatusUI('IDLE', 'Offline / Local', 'bg-slate-500');
+        this.updateStatusUI('IDLE', 'READY TO SYNC', 'bg-slate-500');
 
-        // Event listeners
+        if (input) {
+          input.addEventListener('blur', () => {
+            const normalized = this.normalizeUrl(input.value);
+            if (normalized && normalized !== input.value) {
+              input.value = normalized;
+              this.firebaseUrl = normalized;
+            }
+          });
+        }
+
         const modal = document.getElementById('cloud-modal');
         const openBtn = document.getElementById('btn-open-cloud-modal');
         const closeBtn = document.getElementById('btn-close-cloud-modal');
@@ -1461,14 +1489,15 @@
 
         if (saveBtn) {
           saveBtn.addEventListener('click', () => {
-            const val = input.value.trim();
+            const val = this.normalizeUrl(input ? input.value : '');
             this.firebaseUrl = val;
+            if (input) input.value = val;
             this.autoSync = autoCheck ? autoCheck.checked : true;
             try {
               localStorage.setItem('kolkata_firebase_url', val);
               localStorage.setItem('kolkata_auto_sync', String(this.autoSync));
             } catch(e) {}
-            showToast('✓ Firebase configuration saved');
+            showToast('✓ Firebase URL saved & formatted');
             modal.classList.add('hidden');
             if (val) this.fetchData(false);
           });
@@ -1476,12 +1505,13 @@
 
         if (testBtn) {
           testBtn.addEventListener('click', () => {
-            const val = input ? input.value.trim() : '';
+            const val = this.normalizeUrl(input ? input.value : '');
             if (!val) {
               showToast('Please enter your Firebase Database URL');
               return;
             }
             this.firebaseUrl = val;
+            if (input) input.value = val;
             this.fetchData(false);
           });
         }
@@ -1491,16 +1521,14 @@
         if (tabFetchBtn) tabFetchBtn.addEventListener('click', () => this.fetchData(false));
         if (tabPushBtn) tabPushBtn.addEventListener('click', () => this.pushData());
 
-        // Auto-fetch on load if configured
         if (this.autoSync) {
           setTimeout(() => {
             if (this.firebaseUrl) {
               this.fetchData(true);
             } else {
-              // Try local fallback to live_result.json if running on server
               this.fetchLocalFallback();
             }
-          }, 400);
+          }, 300);
         }
       },
 
@@ -1516,8 +1544,10 @@
             pill.className = 'px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-950 text-emerald-400 border border-emerald-500/30';
           } else if (status === 'FETCHING' || status === 'PUSHING') {
             pill.className = 'px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-sky-950 text-sky-400 border border-sky-500/30 animate-pulse';
+          } else if (status === 'READY') {
+            pill.className = 'px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-teal-950 text-teal-300 border border-teal-500/30';
           } else {
-            pill.className = 'px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-800 text-slate-400 border border-slate-700';
+            pill.className = 'px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-rose-950 text-rose-300 border border-rose-500/40';
           }
         }
 
@@ -1529,7 +1559,7 @@
       },
 
       async fetchData(silent = false) {
-        const url = this.firebaseUrl.trim();
+        let url = this.normalizeUrl(this.firebaseUrl);
         if (!url) {
           if (!silent) {
             showToast('⚠️ Firebase URL not configured. Click Cloud/DB to set.');
@@ -1541,26 +1571,60 @@
 
         this.updateStatusUI('FETCHING', 'SYNCING...', 'bg-sky-400');
         try {
-          const res = await fetch(url, { signal: AbortSignal.timeout(6000) });
-          if (!res.ok) throw new Error('HTTP ' + res.status);
-          const data = await res.json();
-          if (!data) throw new Error('Empty response from Firebase');
+          const res = await fetch(url, { signal: AbortSignal.timeout(7000) });
+          if (!res.ok) {
+            if (res.status === 401 || res.status === 403) {
+              throw new Error('Permission Denied (401). Set Firebase Rules to { ".read": true, ".write": true }');
+            } else if (res.status === 404) {
+              throw new Error('Path not found (404). Check database URL.');
+            } else {
+              throw new Error('Server returned HTTP ' + res.status);
+            }
+          }
 
-          this.applyIncomingData(data);
-          this.isConnected = true;
-          this.lastSyncTime = new Date();
-          const timeStr = this.lastSyncTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-          this.updateStatusUI('CONNECTED', `CONNECTED (${timeStr})`, 'bg-emerald-400');
-          if (!silent) showToast(`✓ Live results fetched from Firebase (${timeStr})`);
+          let data = await res.json();
+
+          // If /live_result.json is null (node hasn't been created yet), attempt fallback to today's date in history_by_date
+          if (!data) {
+            const todayStr = new Date().toISOString().split('T')[0];
+            const historyUrl = url.replace('/live_result.json', `/history_by_date/${todayStr}.json`);
+            try {
+              const hRes = await fetch(historyUrl, { signal: AbortSignal.timeout(5000) });
+              if (hRes.ok) {
+                const hData = await hRes.json();
+                if (hData && (hData.baji_results || hData.rounds)) {
+                  data = {
+                    rounds: hData.rounds || hData.baji_results,
+                    today_dow: AppState.currentDow,
+                    prev_b8: AppState.prevB8
+                  };
+                }
+              }
+            } catch(e) {}
+          }
+
+          if (data && (data.rounds || data.baji_results)) {
+            this.applyIncomingData(data);
+            this.isConnected = true;
+            this.lastSyncTime = new Date();
+            const timeStr = this.lastSyncTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            this.updateStatusUI('CONNECTED', `CONNECTED (${timeStr})`, 'bg-emerald-400');
+            if (!silent) showToast(`✓ Live results fetched from Firebase (${timeStr})`);
+          } else {
+            // Connected successfully but live_result node is currently empty
+            this.isConnected = true;
+            this.updateStatusUI('READY', 'CONNECTED (NODE EMPTY)', 'bg-teal-400');
+            if (!silent) showToast('✓ Firebase connected! Node is empty. Tap "Push to Firebase" to save numbers.');
+          }
         } catch(err) {
-          console.warn('Firebase fetch failed:', err);
-          this.updateStatusUI('ERROR', 'OFFLINE / UNREACHABLE', 'bg-rose-500');
-          if (!silent) showToast('Could not reach Firebase. Check URL or CORS rules.');
+          console.warn('Firebase fetch error:', err);
+          const errMsg = err.message || 'Network / CORS error';
+          this.updateStatusUI('ERROR', 'FAILED: ' + errMsg.slice(0, 24), 'bg-rose-500');
+          if (!silent) showToast(errMsg);
         }
       },
 
       async fetchLocalFallback() {
-        // Embedded default data ensures offline & Canvas compatibility
         const fallbackData = {
           today_dow: 1,
           prev_b8: 3,
@@ -1584,13 +1648,11 @@
             }
           }
         } catch(e) {}
-        // Use embedded data
         this.applyIncomingData(fallbackData);
         this.updateStatusUI('IDLE', 'STANDALONE READY', 'bg-slate-500');
       },
 
       applyIncomingData(data) {
-        // data can have { rounds: [...], prev_b8: ..., today_dow: ... }
         if (data.today_dow !== undefined && data.today_dow !== null) {
           const dow = parseInt(data.today_dow, 10);
           if (!isNaN(dow) && dow >= 0 && dow <= 6) {
@@ -1610,8 +1672,9 @@
 
         renderRollingCards();
 
-        if (Array.isArray(data.rounds)) {
-          data.rounds.forEach(r => {
+        const rawRounds = data.rounds || data.baji_results;
+        if (Array.isArray(rawRounds)) {
+          rawRounds.forEach(r => {
             const bIdx = r.baji;
             if (bIdx >= 1 && bIdx <= 4) {
               AppState.todayResults[bIdx - 1].patti = r.patti !== undefined && r.patti !== null ? String(r.patti) : '';
@@ -1619,8 +1682,8 @@
             }
           });
           syncTodayBajiState(false);
-        } else if (typeof data.rounds === 'object' && data.rounds !== null) {
-          Object.values(data.rounds).forEach(r => {
+        } else if (typeof rawRounds === 'object' && rawRounds !== null) {
+          Object.values(rawRounds).forEach(r => {
             const bIdx = r.baji;
             if (bIdx >= 1 && bIdx <= 4) {
               AppState.todayResults[bIdx - 1].patti = r.patti !== undefined && r.patti !== null ? String(r.patti) : '';
@@ -1632,7 +1695,7 @@
       },
 
       async pushData() {
-        const url = this.firebaseUrl.trim();
+        let url = this.normalizeUrl(this.firebaseUrl);
         if (!url) {
           showToast('⚠️ Please enter Firebase URL in Cloud Settings first');
           const modal = document.getElementById('cloud-modal');
@@ -1661,15 +1724,22 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
           });
-          if (!res.ok) throw new Error('HTTP ' + res.status);
+          if (!res.ok) {
+            if (res.status === 401 || res.status === 403) {
+              throw new Error('Permission Denied (401). Rules must allow: { ".write": true }');
+            } else {
+              throw new Error('HTTP ' + res.status);
+            }
+          }
           this.isConnected = true;
           const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
           this.updateStatusUI('CONNECTED', `CONNECTED (${timeStr})`, 'bg-emerald-400');
           showToast('✓ Successfully pushed live results to Firebase!');
         } catch(err) {
           console.error('Firebase push failed:', err);
+          const errMsg = err.message || 'Write failed';
           this.updateStatusUI('ERROR', 'WRITE FAILED', 'bg-rose-500');
-          showToast('Failed to push to Firebase. Check Database Rules (".write": true)');
+          showToast(errMsg);
         }
       }
     };
