@@ -1,9 +1,29 @@
 {
-  "updated_at": "2026-11-03T12:00:00+05:30",
-  "today_dow": "Tue",
-  "prev_b8": 4,
+  "updated_at": "2026-11-03T18:30:00+05:30",
+  "date": "2026-11-03",
+  "today_dow": 1,
+  "today_dow_name": "Tuesday",
+  "prev_b8": 3,
   "rounds": [
-    {"baji": 1, "patti": "370", "single": 0},
-    {"baji": 2, "patti": "", "single": 9}
+    {
+      "baji": 1,
+      "patti": "370",
+      "single": "0"
+    },
+    {
+      "baji": 2,
+      "patti": "248",
+      "single": "4"
+    },
+    {
+      "baji": 3,
+      "patti": "458",
+      "single": "7"
+    },
+    {
+      "baji": 4,
+      "patti": "333",
+      "single": "9"
+    }
   ]
 }

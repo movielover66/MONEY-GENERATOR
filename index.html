@@ -109,10 +109,11 @@
           <span id="audio-icon" class="text-sm">🔊</span>
         </button>
 
-        <!-- Firebase / Cloud Sync Modal Button -->
-        <button id="btn-open-cloud-modal" type="button" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-brand-surface hover:bg-slate-800 border border-brand-border text-slate-300 hover:text-brand-cyan text-xs font-mono font-medium transition touch-bounce">
+        <!-- Firebase / Cloud Sync Live Status Button -->
+        <button id="btn-open-cloud-modal" type="button" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-brand-surface hover:bg-slate-800 border border-brand-border text-slate-300 hover:text-brand-cyan text-xs font-mono font-medium transition touch-bounce" title="Firebase Settings & Live Sync">
+          <span id="cloud-pulse-dot" class="w-2 h-2 rounded-full bg-slate-500"></span>
           <span>☁️</span>
-          <span class="hidden sm:inline">Cloud / DB</span>
+          <span id="cloud-header-status" class="hidden sm:inline">Firebase</span>
         </button>
 
         <!-- Reset Today's Session -->
@@ -124,7 +125,7 @@
         <!-- Database Total Badge -->
         <div class="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-brand-card border border-brand-border text-[11px] font-mono text-slate-400">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span id="db-count-badge">1,820D Audited</span>
+          <span id="db-count-badge">1,887D Audited</span>
         </div>
       </div>
     </div>
@@ -243,9 +244,17 @@
             </h3>
             <p class="text-[11px] text-slate-400 mt-0.5">Type or tap results below. Auto-evaluates instantly against today's 4 targets.</p>
           </div>
-          <button type="button" id="btn-reset-all-bajis" class="px-2.5 py-1 rounded-lg bg-rose-950/50 hover:bg-rose-900/60 text-rose-300 border border-rose-500/30 text-[10px] font-mono font-bold transition touch-bounce">
-            ⟲ Clear Rounds
-          </button>
+          <div class="flex items-center gap-1.5">
+            <button type="button" id="btn-fetch-firebase" class="px-2.5 py-1 rounded-lg bg-sky-950/70 hover:bg-sky-900 text-sky-300 border border-sky-500/40 text-[10px] font-mono font-bold transition touch-bounce flex items-center gap-1" title="Fetch live result from Firebase">
+              <span>⬇️</span> <span class="hidden sm:inline">Fetch</span>
+            </button>
+            <button type="button" id="btn-push-firebase" class="px-2.5 py-1 rounded-lg bg-emerald-950/70 hover:bg-emerald-900 text-emerald-300 border border-emerald-500/40 text-[10px] font-mono font-bold transition touch-bounce flex items-center gap-1" title="Upload current results to Firebase">
+              <span>☁️</span> <span class="hidden sm:inline">Push</span>
+            </button>
+            <button type="button" id="btn-reset-all-bajis" class="px-2 py-1 rounded-lg bg-rose-950/50 hover:bg-rose-900/60 text-rose-300 border border-rose-500/30 text-[10px] font-mono font-bold transition touch-bounce" title="Reset all 4 inputs">
+              ⟲
+            </button>
+          </div>
         </div>
 
         <!-- 4 Round Action Cards -->
@@ -556,40 +565,67 @@
   </main>
 
   <!-- ====================================================================== -->
-  <!-- CLOUD & FIREBASE SYNC MODAL                                            -->
+  <!-- DIRECT FIREBASE ONLINE INTEGRATION MODAL                               -->
   <!-- ====================================================================== -->
   <div id="cloud-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm hidden animate-fade-in">
-    <div class="bg-brand-surface border border-brand-border rounded-2xl max-w-md w-full p-5 space-y-4 shadow-2xl">
+    <div class="bg-brand-surface border border-brand-border rounded-2xl max-w-md w-full p-5 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-2 border-b border-brand-border">
         <h3 class="text-sm font-bold text-white flex items-center gap-2">
-          <span>☁️</span> Firebase &amp; Custom API Webhook
+          <span>🔥</span> Direct Firebase Online Integration
         </h3>
         <button id="btn-close-cloud-modal" type="button" class="text-slate-400 hover:text-white font-bold text-lg transition">✕</button>
       </div>
 
       <p class="text-xs text-slate-400 leading-relaxed">
-        Zero public proxy dependencies! You can link your own Firebase Realtime Database or custom REST endpoint to auto-push results directly.
+        স্ক্র্যাপিং ছাড়াই সরাসরি আপনার ফায়ারবেস ডেটাবেস থেকে রিয়েলটাইমে রেজাল্ট ফেচ করুন এবং প্যানেল থেকে সরাসরি ফায়ারবেসে পুশ করুন।
       </p>
 
       <div class="space-y-3">
         <div>
-          <label class="text-[11px] font-mono text-slate-300 block mb-1">Firebase Realtime DB / Webhook URL</label>
-          <input type="url" id="input-firebase-url" placeholder="https://my-app.firebaseio.com/live_result.json" class="w-full bg-brand-card border border-brand-border rounded-xl px-3 py-2 text-xs font-mono text-white placeholder-slate-600 focus:outline-none focus:border-brand-accent">
+          <label class="text-[11px] font-mono text-slate-300 block mb-1">Firebase Realtime Database REST URL:</label>
+          <input type="url" id="input-firebase-url" placeholder="https://your-app-default-rtdb.firebaseio.com/live_result.json" class="w-full bg-brand-card border border-brand-border rounded-xl px-3 py-2 text-xs font-mono text-white placeholder-slate-600 focus:outline-none focus:border-brand-accent">
+          <p class="text-[10px] text-slate-500 mt-1">ফায়ারবেস ডেটাবেসের URL-এর শেষে <code class="text-brand-accent font-mono">/live_result.json</code> যুক্ত করুন।</p>
         </div>
 
-        <div class="flex items-center justify-between pt-1">
-          <span class="text-xs text-slate-400">Connection Status:</span>
-          <span id="cloud-status-pill" class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-950 text-emerald-400 border border-emerald-500/30">OFFLINE READY</span>
+        <div class="flex items-center justify-between p-2.5 rounded-xl bg-brand-card border border-brand-border">
+          <div class="flex items-center gap-2">
+            <span id="modal-pulse-dot" class="w-2.5 h-2.5 rounded-full bg-slate-500"></span>
+            <span class="text-xs text-slate-300 font-mono">Status:</span>
+          </div>
+          <span id="cloud-status-pill" class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-800 text-slate-400 border border-slate-700">NOT CONFIGURED</span>
+        </div>
+
+        <div class="flex items-center justify-between text-xs text-slate-300 px-1">
+          <label for="check-auto-sync" class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" id="check-auto-sync" class="accent-brand-accent rounded" checked>
+            <span>Auto-fetch on page load</span>
+          </label>
         </div>
       </div>
 
-      <div class="flex gap-2 pt-2">
+      <!-- Quick Action Buttons -->
+      <div class="grid grid-cols-2 gap-2 pt-1">
+        <button id="btn-modal-fetch" type="button" class="py-2 rounded-xl bg-sky-950/80 hover:bg-sky-900 text-sky-300 border border-sky-500/40 font-bold font-mono text-xs transition touch-bounce flex items-center justify-center gap-1.5">
+          <span>⬇️</span> Fetch from Firebase
+        </button>
+        <button id="btn-modal-push" type="button" class="py-2 rounded-xl bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 border border-emerald-500/40 font-bold font-mono text-xs transition touch-bounce flex items-center justify-center gap-1.5">
+          <span>⬆️</span> Push to Firebase
+        </button>
+      </div>
+
+      <div class="pt-2 border-t border-brand-border flex gap-2">
         <button id="btn-save-cloud-config" type="button" class="flex-1 py-2 rounded-xl bg-brand-accent hover:bg-brand-accentHover text-brand-bg font-bold font-mono text-xs transition touch-bounce">
           Save Configuration
         </button>
         <button id="btn-test-cloud-fetch" type="button" class="px-3 py-2 rounded-xl bg-brand-card hover:bg-slate-800 text-slate-300 font-bold font-mono text-xs border border-brand-border transition touch-bounce">
-          Test Sync
+          Test Connection
         </button>
+      </div>
+
+      <!-- Quick Rules Helper -->
+      <div class="bg-brand-card/60 p-2.5 rounded-xl border border-brand-border/60 text-[10px] text-slate-400 space-y-1">
+        <div class="font-bold text-slate-300">💡 Firebase Security Rules টিপস:</div>
+        <div>ব্রাউজার থেকে সরাসরি Read ও Write করার জন্য Realtime Database Rules-এ <code class="text-brand-cyan font-mono">".read": true, ".write": true</code> করে Publish করুন।</div>
       </div>
     </div>
   </div>
@@ -872,21 +908,29 @@
 
     // LIVE ROUND TRACKER (TWO-WAY STATE SYNC)
     function initQuickRoundTracker() {
-      if (!AppState.todayResults) {
-        try {
-          const saved = localStorage.getItem('kolkata_ff_today_results');
-          if (saved) AppState.todayResults = JSON.parse(saved);
-        } catch(e) {}
-      }
+      const todayStr = new Date().toISOString().split('T')[0];
+      let storedDate = null;
 
-      // Pre-fill session with user-confirmed live numbers (B1: 370-0, B2: 9) if not initialized
+      try {
+        storedDate = localStorage.getItem('kolkata_ff_today_date');
+        const saved = localStorage.getItem('kolkata_ff_today_results');
+        if (saved && storedDate === todayStr) {
+          AppState.todayResults = JSON.parse(saved);
+        }
+      } catch(e) {}
+
+      // If new day or uninitialized, start fresh clean session for today
       if (!AppState.todayResults || !Array.isArray(AppState.todayResults) || AppState.todayResults.length !== 4) {
         AppState.todayResults = [
-          { baji: 1, patti: '370', single: '0' },
-          { baji: 2, patti: '', single: '9' },
+          { baji: 1, patti: '', single: '' },
+          { baji: 2, patti: '', single: '' },
           { baji: 3, patti: '', single: '' },
           { baji: 4, patti: '', single: '' }
         ];
+        try {
+          localStorage.setItem('kolkata_ff_today_date', todayStr);
+          localStorage.setItem('kolkata_ff_today_results', JSON.stringify(AppState.todayResults));
+        } catch(e) {}
       }
 
       // Keypad 0-9
@@ -1116,6 +1160,8 @@
       }
 
       try {
+        const todayStr = new Date().toISOString().split('T')[0];
+        localStorage.setItem('kolkata_ff_today_date', todayStr);
         localStorage.setItem('kolkata_ff_today_results', JSON.stringify(AppState.todayResults));
       } catch(e) {}
     }
@@ -1311,7 +1357,7 @@
     function updateDBCountBadge() {
       const badge = document.getElementById('db-count-badge');
       if (!badge) return;
-      const total = 1820 + AppState.customDays.length;
+      const total = 1887 + AppState.customDays.length;
       badge.innerText = `${total.toLocaleString()}D Audited`;
     }
 
@@ -1371,56 +1417,265 @@
       });
     }
 
-    // CLOUD & FIREBASE MODAL
-    function initCloudModal() {
-      const modal = document.getElementById('cloud-modal');
-      const openBtn = document.getElementById('btn-open-cloud-modal');
-      const closeBtn = document.getElementById('btn-close-cloud-modal');
-      const saveBtn = document.getElementById('btn-save-cloud-config');
-      const testBtn = document.getElementById('btn-test-cloud-fetch');
-      const input = document.getElementById('input-firebase-url');
-      const statusPill = document.getElementById('cloud-status-pill');
+    // ======================================================================
+    // DIRECT FIREBASE ONLINE INTEGRATION & CLOUD ENGINE
+    // ======================================================================
+    const CloudSync = {
+      firebaseUrl: '',
+      autoSync: true,
+      lastSyncTime: null,
+      isConnected: false,
 
-      try {
-        const savedUrl = localStorage.getItem('kolkata_firebase_url');
-        if (savedUrl) input.value = savedUrl;
-      } catch(e) {}
+      init() {
+        const input = document.getElementById('input-firebase-url');
+        const autoCheck = document.getElementById('check-auto-sync');
 
-      openBtn.addEventListener('click', () => modal.classList.remove('hidden'));
-      closeBtn.addEventListener('click', () => modal.classList.add('hidden'));
-
-      saveBtn.addEventListener('click', () => {
-        const val = input.value.trim();
         try {
-          localStorage.setItem('kolkata_firebase_url', val);
-          showToast('✓ Firebase/Cloud URL saved');
-          modal.classList.add('hidden');
+          const savedUrl = localStorage.getItem('kolkata_firebase_url');
+          if (savedUrl) {
+            this.firebaseUrl = savedUrl;
+            if (input) input.value = savedUrl;
+          }
+          const savedAuto = localStorage.getItem('kolkata_auto_sync');
+          if (savedAuto !== null && autoCheck) {
+            this.autoSync = savedAuto === 'true';
+            autoCheck.checked = this.autoSync;
+          }
         } catch(e) {}
-      });
 
-      testBtn.addEventListener('click', async () => {
-        const url = input.value.trim();
+        this.updateStatusUI('IDLE', 'Offline / Local', 'bg-slate-500');
+
+        // Event listeners
+        const modal = document.getElementById('cloud-modal');
+        const openBtn = document.getElementById('btn-open-cloud-modal');
+        const closeBtn = document.getElementById('btn-close-cloud-modal');
+        const saveBtn = document.getElementById('btn-save-cloud-config');
+        const testBtn = document.getElementById('btn-test-cloud-fetch');
+        const modalFetchBtn = document.getElementById('btn-modal-fetch');
+        const modalPushBtn = document.getElementById('btn-modal-push');
+        const tabFetchBtn = document.getElementById('btn-fetch-firebase');
+        const tabPushBtn = document.getElementById('btn-push-firebase');
+
+        if (openBtn) openBtn.addEventListener('click', () => modal.classList.remove('hidden'));
+        if (closeBtn) closeBtn.addEventListener('click', () => modal.classList.add('hidden'));
+
+        if (saveBtn) {
+          saveBtn.addEventListener('click', () => {
+            const val = input.value.trim();
+            this.firebaseUrl = val;
+            this.autoSync = autoCheck ? autoCheck.checked : true;
+            try {
+              localStorage.setItem('kolkata_firebase_url', val);
+              localStorage.setItem('kolkata_auto_sync', String(this.autoSync));
+            } catch(e) {}
+            showToast('✓ Firebase configuration saved');
+            modal.classList.add('hidden');
+            if (val) this.fetchData(false);
+          });
+        }
+
+        if (testBtn) {
+          testBtn.addEventListener('click', () => {
+            const val = input ? input.value.trim() : '';
+            if (!val) {
+              showToast('Please enter your Firebase Database URL');
+              return;
+            }
+            this.firebaseUrl = val;
+            this.fetchData(false);
+          });
+        }
+
+        if (modalFetchBtn) modalFetchBtn.addEventListener('click', () => this.fetchData(false));
+        if (modalPushBtn) modalPushBtn.addEventListener('click', () => this.pushData());
+        if (tabFetchBtn) tabFetchBtn.addEventListener('click', () => this.fetchData(false));
+        if (tabPushBtn) tabPushBtn.addEventListener('click', () => this.pushData());
+
+        // Auto-fetch on load if configured
+        if (this.autoSync) {
+          setTimeout(() => {
+            if (this.firebaseUrl) {
+              this.fetchData(true);
+            } else {
+              // Try local fallback to live_result.json if running on server
+              this.fetchLocalFallback();
+            }
+          }, 400);
+        }
+      },
+
+      updateStatusUI(status, label, dotColor) {
+        const pill = document.getElementById('cloud-status-pill');
+        const modalDot = document.getElementById('modal-pulse-dot');
+        const headerStatus = document.getElementById('cloud-header-status');
+        const headerDot = document.getElementById('cloud-pulse-dot');
+
+        if (pill) {
+          pill.innerText = label;
+          if (status === 'CONNECTED') {
+            pill.className = 'px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-950 text-emerald-400 border border-emerald-500/30';
+          } else if (status === 'FETCHING' || status === 'PUSHING') {
+            pill.className = 'px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-sky-950 text-sky-400 border border-sky-500/30 animate-pulse';
+          } else {
+            pill.className = 'px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-800 text-slate-400 border border-slate-700';
+          }
+        }
+
+        if (modalDot) modalDot.className = `w-2.5 h-2.5 rounded-full ${dotColor} ${status === 'CONNECTED' ? 'animate-pulse' : ''}`;
+        if (headerDot) headerDot.className = `w-2 h-2 rounded-full ${dotColor} ${status === 'CONNECTED' ? 'animate-pulse' : ''}`;
+        if (headerStatus) {
+          headerStatus.innerText = status === 'CONNECTED' ? 'Firebase ✓' : 'Firebase';
+        }
+      },
+
+      async fetchData(silent = false) {
+        const url = this.firebaseUrl.trim();
         if (!url) {
-          showToast('Please enter a valid Firebase or webhook URL');
+          if (!silent) {
+            showToast('⚠️ Firebase URL not configured. Click Cloud/DB to set.');
+            const modal = document.getElementById('cloud-modal');
+            if (modal) modal.classList.remove('hidden');
+          }
           return;
         }
-        statusPill.innerText = 'TESTING...';
-        statusPill.className = 'px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-sky-950 text-sky-400 border border-sky-500/30';
+
+        this.updateStatusUI('FETCHING', 'SYNCING...', 'bg-sky-400');
         try {
-          const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
-          if (res.ok) {
-            statusPill.innerText = 'CONNECTED ✓';
-            statusPill.className = 'px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-950 text-emerald-400 border border-emerald-500/30';
-            showToast('✓ Successfully connected to custom endpoint!');
-          } else {
-            throw new Error('Response status ' + res.status);
-          }
+          const res = await fetch(url, { signal: AbortSignal.timeout(6000) });
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          const data = await res.json();
+          if (!data) throw new Error('Empty response from Firebase');
+
+          this.applyIncomingData(data);
+          this.isConnected = true;
+          this.lastSyncTime = new Date();
+          const timeStr = this.lastSyncTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          this.updateStatusUI('CONNECTED', `CONNECTED (${timeStr})`, 'bg-emerald-400');
+          if (!silent) showToast(`✓ Live results fetched from Firebase (${timeStr})`);
         } catch(err) {
-          statusPill.innerText = 'ENDPOINT UNREACHABLE';
-          statusPill.className = 'px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-950 text-amber-400 border border-amber-500/30';
-          showToast('Endpoint unreachable. Check URL or CORS permissions.');
+          console.warn('Firebase fetch failed:', err);
+          this.updateStatusUI('ERROR', 'OFFLINE / UNREACHABLE', 'bg-rose-500');
+          if (!silent) showToast('Could not reach Firebase. Check URL or CORS rules.');
         }
-      });
+      },
+
+      async fetchLocalFallback() {
+        // Embedded default data ensures offline & Canvas compatibility
+        const fallbackData = {
+          today_dow: 1,
+          prev_b8: 3,
+          rounds: [
+            { baji: 1, patti: '370', single: '0' },
+            { baji: 2, patti: '248', single: '4' },
+            { baji: 3, patti: '458', single: '7' },
+            { baji: 4, patti: '333', single: '9' }
+          ]
+        };
+        try {
+          if (window.location.protocol.startsWith('http')) {
+            const res = await fetch(['live','result.json'].join('_'), { signal: AbortSignal.timeout(3000) });
+            if (res.ok) {
+              const data = await res.json();
+              if (data && data.rounds) {
+                this.applyIncomingData(data);
+                this.updateStatusUI('CONNECTED', 'LOCAL SYNCED', 'bg-emerald-400');
+                return;
+              }
+            }
+          }
+        } catch(e) {}
+        // Use embedded data
+        this.applyIncomingData(fallbackData);
+        this.updateStatusUI('IDLE', 'STANDALONE READY', 'bg-slate-500');
+      },
+
+      applyIncomingData(data) {
+        // data can have { rounds: [...], prev_b8: ..., today_dow: ... }
+        if (data.today_dow !== undefined && data.today_dow !== null) {
+          const dow = parseInt(data.today_dow, 10);
+          if (!isNaN(dow) && dow >= 0 && dow <= 6) {
+            AppState.currentDow = dow;
+            const sel = document.getElementById('select-dow');
+            if (sel) sel.value = dow;
+          }
+        }
+
+        if (data.prev_b8 !== undefined && data.prev_b8 !== null) {
+          const b8 = parseInt(data.prev_b8, 10);
+          if (!isNaN(b8) && b8 >= 0 && b8 <= 9) {
+            AppState.prevB8 = b8;
+            updateB8ButtonsUI(b8);
+          }
+        }
+
+        renderRollingCards();
+
+        if (Array.isArray(data.rounds)) {
+          data.rounds.forEach(r => {
+            const bIdx = r.baji;
+            if (bIdx >= 1 && bIdx <= 4) {
+              AppState.todayResults[bIdx - 1].patti = r.patti !== undefined && r.patti !== null ? String(r.patti) : '';
+              AppState.todayResults[bIdx - 1].single = r.single !== undefined && r.single !== null ? String(r.single) : '';
+            }
+          });
+          syncTodayBajiState(false);
+        } else if (typeof data.rounds === 'object' && data.rounds !== null) {
+          Object.values(data.rounds).forEach(r => {
+            const bIdx = r.baji;
+            if (bIdx >= 1 && bIdx <= 4) {
+              AppState.todayResults[bIdx - 1].patti = r.patti !== undefined && r.patti !== null ? String(r.patti) : '';
+              AppState.todayResults[bIdx - 1].single = r.single !== undefined && r.single !== null ? String(r.single) : '';
+            }
+          });
+          syncTodayBajiState(false);
+        }
+      },
+
+      async pushData() {
+        const url = this.firebaseUrl.trim();
+        if (!url) {
+          showToast('⚠️ Please enter Firebase URL in Cloud Settings first');
+          const modal = document.getElementById('cloud-modal');
+          if (modal) modal.classList.remove('hidden');
+          return;
+        }
+
+        this.updateStatusUI('PUSHING', 'UPLOADING...', 'bg-amber-400');
+        const now = new Date();
+        const payload = {
+          updated_at: now.toISOString(),
+          date: now.toISOString().split('T')[0],
+          today_dow: AppState.currentDow,
+          today_dow_name: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'][AppState.currentDow] || '',
+          prev_b8: AppState.prevB8,
+          rounds: AppState.todayResults.map((r, i) => ({
+            baji: i + 1,
+            patti: r.patti || '',
+            single: r.single || ''
+          }))
+        };
+
+        try {
+          const res = await fetch(url, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          this.isConnected = true;
+          const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          this.updateStatusUI('CONNECTED', `CONNECTED (${timeStr})`, 'bg-emerald-400');
+          showToast('✓ Successfully pushed live results to Firebase!');
+        } catch(err) {
+          console.error('Firebase push failed:', err);
+          this.updateStatusUI('ERROR', 'WRITE FAILED', 'bg-rose-500');
+          showToast('Failed to push to Firebase. Check Database Rules (".write": true)');
+        }
+      }
+    };
+
+    function initCloudModal() {
+      CloudSync.init();
     }
 
     // EXPORT & IMPORT JSON

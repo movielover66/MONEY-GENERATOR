@@ -1,33 +1,47 @@
-# Kolkata FF Quantum Prediction & Audit Panel
-### 95.33% Verified 8-Year Day-of-Week 4-Digit Rolling Matrix Engine
+# Kolkata FF Quantum Prediction & Live Audit Panel (V33.0)
 
-## How to Enable 100% Zero-CORS Live Auto-Sync on GitHub Pages
-Your repository `movielover66.github.io/MONEY-GENERATOR/` now includes an automated workflow:
-1. When you push this folder to GitHub, `.github/workflows/update_result.yml` will automatically run every 30 minutes.
-2. It fetches the latest Kolkata FF result from the official source and saves it to `live_result.json` in your repository.
-3. Your website (`index.html`) on GitHub Pages directly reads `./live_result.json` in 10 milliseconds with **ZERO CORS issues, ZERO proxy delays, and 100% uptime**!
+প্রজেক্টটি সম্পূর্ণ ক্লাউড-ইন্টিগ্রেটেড এবং অফলাইন-রেডি। এতে কোনো থার্ড-পার্টি ওয়েব স্ক্র্যাপিং নেই—আপনি সরাসরি আপনার ফায়ারবেস (Firebase Realtime Database) দিয়ে রিয়েলটাইমে অনলাইন সিঙ্ক করতে পারবেন অথবা প্যানেলে বসেই সরাসরি ফায়ারবেসে রেজাল্ট পুশ করতে পারবেন।
 
-## How to Run with Custom Cloudflare Worker (Optional)
-If you prefer Cloudflare:
-1. Log into your Cloudflare dashboard > **Workers & Pages** > **Create Worker**.
-2. Paste the following 10 lines of code and click **Deploy**:
-```javascript
-export default {
-  async fetch(request) {
-    const target = "https://kolkataff.tv/";
-    const res = await fetch(target, {
-      headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" }
-    });
-    const text = await res.text();
-    return new Response(text, {
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "text/html; charset=utf-8"
-      }
-    });
-  }
-};
-```
-3. Copy your Worker URL (e.g. `https://kolkata-proxy.your-name.workers.dev`).
-4. In your website, go to Tab 4 ("ব্যাকআপ ও গিটহাব ডেপ্লয়"), paste this link into the **"নিজস্ব ক্লাউডফেয়ার ওয়ার্কার প্রক্সি লিংক"** box, and click **Save**.
-5. Done! Your panel will now sync directly through your private Cloudflare worker forever!
+---
+
+## 🚀 প্রধান বৈশিষ্ট্যসমূহ:
+1. **Direct Firebase Online Sync**:
+   - কোনো ব্যাকএন্ড সার্ভার বা ক্রন জব ছাড়াই ব্রাউজার থেকে সরাসরি ফায়ারবেস ডেটাবেসের সাথে কানেক্ট হয়।
+   - **Fetch (⬇️)**: ফায়ারবেস থেকে লাইভ রেজাল্ট অটোমেটিক ফেচ করে প্রতিটি বাজির পাস/মিস হিসাব করে।
+   - **Push (⬆️)**: আপনি প্যানেলে রেজাল্ট লিখে "Push to Firebase" চাপলেই ক্লাউডে লাইভ রেজাল্ট সাথে সাথে আপডেট হয়ে যাবে।
+2. **Date-Aware Session Manager**:
+   - তারিখ পরিবর্তন হলে নিজে থেকেই নতুন দিনের ফ্রেশ সেশন শুরু করে। পুরোনো দিনের বাজি আটকে থাকার কোনো বাগ নেই।
+3. **1,887 Days Complete Historical Dataset**:
+   - ১ জুলাই ২০২০ থেকে ৩ নভেম্বর ২০২৬ পর্যন্ত সম্পূর্ণ ভ্যালিডেট করা ১,৮৮৭ দিনের হিস্টোরিক্যাল ডেটা (`dataset.json`) অন্তর্ভুক্ত।
+4. **Quantum DOW Matrix & V33.0 Patti Engine**:
+   - সপ্তাহের ৭ দিনের ১০টি ক্লোজিং নোড দিয়ে ৪-ডিজিট রোলিং প্রেডিকশন।
+   - টপ ৪ পাত্তি, কাট ডিজিট এবং সিপি (Cycle Patti) অটো-ক্যালকুলেশন।
+5. **Martingale & Capital Protection Calculator**:
+   - ২x ও ৩x রিকভারি স্টেক, কিউমুলেটিভ কস্ট, ৯ গুণ পে-আউট রিটার্ন ও নেট প্রফিট/ROI ট্র্যাকার।
+
+---
+
+## ☁️ ফায়ারবেস কানেক্ট করার সহজ নিয়ম (১ মিনিটের সেটআপ):
+
+1. **ফায়ারবেস প্রজেক্ট তৈরি করুন**:
+   - [Firebase Console](https://console.firebase.google.com/)-এ যান এবং একটি প্রজেক্ট খুলুন।
+   - বামদিকের মেনু থেকে **Build > Realtime Database** সিলেক্ট করে ডেটাবেস তৈরি করুন।
+
+2. **Rules সেট করুন**:
+   - ডেটাবেসের **Rules** ট্যাবে যান এবং রুলসটি নিচের মতো করে **Publish** করুন:
+   ```json
+   {
+     "rules": {
+       ".read": true,
+       ".write": true
+     }
+   }
+   ```
+
+3. **URL টি প্যানেলে বসান**:
+   - আপনার Realtime Database-এর মূল URL-টি কপি করুন (যেমন: `https://my-app-default-rtdb.firebaseio.com`)।
+   - এর শেষে `/live_result.json` যোগ করুন:
+     `https://my-app-default-rtdb.firebaseio.com/live_result.json`
+   - প্যানেলের ওপরের ডানদিকের **☁️ Firebase** বাটনে ক্লিক করে URL-টি পেস্ট করে **Save Configuration** চাপুন।
+
+এখন আপনি যখনই বাজি টাইপ করে **Push to Firebase** চাপবেন, তা সরাসরি আপনার ফায়ারবেসে সেভ হয়ে যাবে এবং যেকোনো ডিভাইস থেকে সাইট খুললেই সেই লাইভ রেজাল্ট লোড হয়ে যাবে!
