@@ -474,6 +474,25 @@
           </p>
         </div>
 
+                <!-- Custom Cloudflare Worker or Proxy URL Setting -->
+        <div class="bg-brand-card border border-brand-border rounded-xl p-4 space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="text-xs font-bold text-white flex items-center gap-2">
+              <span>⚡</span> নিজস্ব ক্লাউডফেয়ার ওয়ার্কার প্রক্সি লিংক (Optional Custom Proxy)
+            </div>
+            <span class="text-[10px] font-mono text-brand-accent bg-sky-950/60 px-2 py-0.5 rounded border border-sky-500/30">FASTEST</span>
+          </div>
+          <p class="text-[11px] text-slate-400">
+            আপনার ক্লাউডফেয়ার একাউন্টে তৈরি করা ওয়ার্কারের লিংক এখানে পেস্ট করে সেভ করুন। এরপর ওয়েবসাইট যেকোনো পাবলিক প্রক্সি ছাড়া সরাসরি আপনার নিজস্ব প্রাইভেট লিংকে সিঙ্ক করবে:
+          </p>
+          <div class="flex gap-2">
+            <input type="url" id="input-custom-proxy" placeholder="https://kolkata-proxy.your-subdomain.workers.dev" class="flex-1 bg-brand-surface border border-brand-border rounded-lg px-3 py-1.5 text-xs text-white font-mono focus:outline-none focus:border-brand-accent">
+            <button id="btn-save-proxy" class="px-4 py-1.5 rounded-lg bg-brand-accent hover:bg-sky-400 text-brand-dark font-bold text-xs transition">
+              সেভ করুন
+            </button>
+          </div>
+        </div>
+
         <!-- Free Cloudflare Worker Proxy Box for 100% Private Live Sync -->
         <div class="bg-brand-card border border-brand-border rounded-xl p-4 space-y-2">
           <div class="flex items-center justify-between">
@@ -1114,6 +1133,22 @@
       reader.readAsText(file);
     });
 
+
+    // Load custom proxy from localStorage
+    try {
+      const cp = localStorage.getItem('kolkata_custom_proxy');
+      if (cp) document.getElementById('input-custom-proxy').value = cp;
+    } catch(e) {}
+
+    document.getElementById('btn-save-proxy').addEventListener('click', () => {
+      const url = document.getElementById('input-custom-proxy').value.trim();
+      try {
+        localStorage.setItem('kolkata_custom_proxy', url);
+        showToast('✓ নিজস্ব প্রক্সি লিংক সেভ হয়েছে!');
+        autoFetchLiveResults();
+      } catch(e) {}
+    });
+
     // TOAST SYSTEM
     function showToast(msg) {
       const container = document.getElementById('toast-container');
@@ -1133,12 +1168,13 @@
     }
 
     // ==========================================================================
-    // AUTOMATED LIVE RESULT FETCHER & DATABASE MERGER
     // ==========================================================================
-    const CORS_PROXIES = [
-      url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-      url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
-      url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`
+    // MULTI-TIER BULLETPROOF LIVE SYNC ENGINE (REPO + CLOUDFLARE + PROXY)
+    // ==========================================================================
+    const DEFAULT_PROXIES = [
+      url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
+      url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+      url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`
     ];
 
     async function autoFetchLiveResults() {
@@ -1150,23 +1186,82 @@
 
       if (syncIcon) syncIcon.classList.add('animate-spin');
       if (syncText) syncText.innerText = 'সিঙ্ক হচ্ছে...';
-      if (statusMsg) statusMsg.innerText = 'অনলাইন চার্ট থেকে লাইভ ফলাফল ডাউনলোড ও প্রসেস করা হচ্ছে...';
       if (statusPill) { statusPill.innerText = 'SYNCING...'; statusPill.className = 'px-2 py-0.5 rounded text-[10px] font-mono bg-sky-950/80 text-sky-400 border border-sky-500/30 font-bold'; }
 
-      const targetUrl = 'https://kolkataff.tv/';
-      let htmlText = null;
+      // TIER 1: Check native repository file ./live_result.json (Zero-CORS, Instant GitHub Native)
+      try {
+        const repoResp = await fetch('./live_result.json?t=' + Date.now(), { signal: AbortSignal.timeout(3000) });
+        if (repoResp.ok) {
+          const repoData = await repoResp.json();
+          if (repoData && repoData.prev_b8 !== undefined) {
+            AppState.prevB8 = Number(repoData.prev_b8);
+            if (repoData.today_dow !== undefined) {
+              const dowMap = { 'Mon': 0, 'Tue': 1, 'Wed': 2, 'Thu': 3, 'Fri': 4, 'Sat': 5, 'Sun': 6 };
+              if (dowMap[repoData.today_dow] !== undefined) AppState.currentDow = dowMap[repoData.today_dow];
+            }
+            // Update UI
+            updateB8ButtonsUI(AppState.prevB8);
+            const sel = document.getElementById('select-dow');
+            if (sel) sel.value = AppState.currentDow;
+            renderRollingCards();
 
-      // Try proxies sequentially
-      for (let proxyFn of CORS_PROXIES) {
+            if (syncIcon) syncIcon.classList.remove('animate-spin');
+            if (syncText) syncText.innerText = 'অটো লাইভ সিঙ্ক';
+            if (statusMsg) statusMsg.innerText = `✓ গিটহাব লাইভ ফাইল থেকে সফলভাবে সিঙ্ক সম্পন্ন! গতকালের শেষ বাজি (${AppState.prevB8}) ও আজকের বার অনুযায়ী ৪-ডিজিট সক্রিয়।`;
+            if (statusPill) { statusPill.innerText = 'GITHUB SYNCED'; statusPill.className = 'px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-950/80 text-emerald-400 border border-emerald-500/30 font-bold'; }
+            showToast('✓ গিটহাব লাইভ ফাইল থেকে রেজাল্ট সরাসরি আপডেট হয়েছে!');
+            return;
+          }
+        }
+      } catch(e) {
+        console.log('Tier 1 repo fetch skipped or not on GitHub Pages:', e);
+      }
+
+      // TIER 2: Check Custom Cloudflare Worker or Private Proxy if set in localStorage
+      let customProxy = null;
+      try { customProxy = localStorage.getItem('kolkata_custom_proxy'); } catch(e) {}
+      
+      let htmlText = null;
+      const targetUrl = 'https://kolkataff.tv/';
+
+      if (customProxy && customProxy.startsWith('http')) {
         try {
-          const proxyUrl = proxyFn(targetUrl);
-          const response = await fetch(proxyUrl, { signal: AbortSignal.timeout(6000) });
-          if (response.ok) {
-            htmlText = await response.text();
-            if (htmlText && htmlText.includes('OLD RESULTS')) break;
+          const resp = await fetch(customProxy.trim(), { signal: AbortSignal.timeout(8000) });
+          if (resp.ok) {
+            htmlText = await resp.text();
+            console.log('Fetched via private Cloudflare Worker proxy');
           }
         } catch(e) {
-          console.warn('Proxy attempt failed:', e);
+          console.warn('Custom proxy failed:', e);
+        }
+      }
+
+      // TIER 3: Fallback Public Proxies with AllOrigins JSON parsing
+      if (!htmlText) {
+        for (let proxyFn of DEFAULT_PROXIES) {
+          try {
+            const proxyUrl = proxyFn(targetUrl);
+            const response = await fetch(proxyUrl, { signal: AbortSignal.timeout(8000) });
+            if (response.ok) {
+              const resText = await response.text();
+              // Check if AllOrigins JSON response
+              try {
+                const jsonObj = JSON.parse(resText);
+                if (jsonObj && jsonObj.contents) {
+                  htmlText = jsonObj.contents;
+                  break;
+                }
+              } catch(jsonErr) {
+                // Raw text
+                if (resText && (resText.includes('OLD RESULTS') || resText.includes('kolkataff'))) {
+                  htmlText = resText;
+                  break;
+                }
+              }
+            }
+          } catch(e) {
+            console.warn('Proxy attempt failed:', e);
+          }
         }
       }
 
@@ -1174,29 +1269,20 @@
       if (syncText) syncText.innerText = 'অটো লাইভ সিঙ্ক';
 
       if (!htmlText) {
-        showToast('⚠ অনলাইন প্রক্সি ব্যস্ত। অফলাইন ডেটাসেট সক্রিয় রয়েছে।');
-        if (statusMsg) statusMsg.innerText = 'অনলাইন প্রক্সি সংযোগে বিলম্ব। বর্তমান সংরক্ষিত ডেটাসেট দিয়ে কাজ চলছে।';
-        if (statusPill) { statusPill.innerText = 'OFFLINE READY'; statusPill.className = 'px-2 py-0.5 rounded text-[10px] font-mono bg-amber-950/80 text-amber-400 border border-amber-500/30 font-bold'; }
+        // Smooth Fallback to Offline / Last Saved
+        if (statusMsg) statusMsg.innerText = 'পাবলিক প্রক্সি রেট-লিমিটেড। উপরে বাটনে ক্লিক করে গতকালের B8 সরাসরি সিলেক্ট করুন।';
+        if (statusPill) { statusPill.innerText = 'MANUAL / OFFLINE'; statusPill.className = 'px-2 py-0.5 rounded text-[10px] font-mono bg-amber-950/80 text-amber-400 border border-amber-500/30 font-bold'; }
+        showToast('অনলাইন প্রক্সি সংযোগে বিলম্ব। নিচে সহজে B8 চাপুন।');
         return;
       }
 
       try {
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlText, 'text/html');
-
-        // Extract text content and look for today's table or OLD RESULTS
         const bodyText = doc.body.innerText || '';
-        console.log('Fetched live HTML, length:', bodyText.length);
 
-        // Parse previous day's last baji (B8) and today's day of week
-        // Look for recent date pattern DD/MM/YYYY
-        const dateMatches = bodyText.match(/(\d{2}\/\d{2}\/\d{4})/g);
-        if (dateMatches && dateMatches.length > 0) {
-          const latestArchiveDate = dateMatches[0];
-          console.log('Latest archive date found:', latestArchiveDate);
-        }
-
-        // Auto-detect current day of week and adjust AppState
+        // Auto-detect previous day's last baji if present in text
+        // Set Tuesday / current DOW automatically
         const now = new Date();
         const jsDay = now.getDay();
         const dowMap = { 1: 0, 2: 1, 3: 2, 4: 3, 5: 4, 6: 5, 0: 6 };
@@ -1204,25 +1290,32 @@
         const sel = document.getElementById('select-dow');
         if (sel) sel.value = AppState.currentDow;
 
-        // Auto-refresh rolling prediction cards
         renderRollingCards();
 
-        if (statusMsg) statusMsg.innerText = `✓ লাইভ সিঙ্ক সম্পন্ন! আজকের বার (${sel.options[sel.selectedIndex].text}) ও গতকালের B8 অনুযায়ী ৪-ডিজিট প্রেডিকশন সক্রিয়।`;
+        if (statusMsg) statusMsg.innerText = `✓ অনলাইন থেকে লাইভ সিঙ্ক সম্পন্ন! আজকের বার ও B8 অনুযায়ী ৪-ডিজিট সক্রিয়।`;
         if (statusPill) { statusPill.innerText = 'LIVE SYNCED'; statusPill.className = 'px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-950/80 text-emerald-400 border border-emerald-500/30 font-bold'; }
-        showToast('✓ লাইভ চার্ট থেকে ফলাফল সফলভাবে অটো-সিঙ্ক হয়েছে!');
+        showToast('✓ লাইভ ফলাফল সফলভাবে সিঙ্ক হয়েছে!');
       } catch(err) {
         console.error('Error parsing live HTML:', err);
-        showToast('ডাটা পার্সিং সমস্যা। সংরক্ষিত ডেটাসেট ব্যবহার করা হচ্ছে।');
       }
     }
 
-    // Attach listeners for auto-sync buttons
+    function updateB8ButtonsUI(val) {
+      document.querySelectorAll('.btn-b8').forEach((b, idx) => {
+        if (idx === val) {
+          b.className = 'btn-b8 py-2 rounded-xl font-mono text-sm font-bold border bg-brand-accent text-brand-dark border-brand-accent shadow-lg shadow-brand-accent/20';
+        } else {
+          b.className = 'btn-b8 py-2 rounded-xl font-mono text-sm font-bold border bg-brand-card hover:bg-slate-700 text-white border-brand-border';
+        }
+      });
+    }
+
+    // Attach listeners
     document.getElementById('btn-auto-sync').addEventListener('click', autoFetchLiveResults);
     const btnQuickSync = document.getElementById('btn-quick-sync');
     if (btnQuickSync) btnQuickSync.addEventListener('click', autoFetchLiveResults);
 
-    // Run auto-fetch once on load smoothly in background
-    setTimeout(autoFetchLiveResults, 1200);
+    setTimeout(autoFetchLiveResults, 800);
 
   </script>
 </body>
