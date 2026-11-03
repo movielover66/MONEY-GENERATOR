@@ -1,233 +1,261 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>QUANTUM FF // 95.33% DOW 4-Digit Matrix Engine</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-  <!-- Chart.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <!-- Fonts -->
+  <title>Kolkata FF Quantum Prediction &amp; Audit Panel (V33.0)</title>
+  
+  <!-- Google Fonts: Inter & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
           fontFamily: {
-            sans: ['Plus Jakarta Sans', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
             mono: ['JetBrains Mono', 'monospace'],
           },
           colors: {
             brand: {
-              bg: '#050811',
-              surface: '#0c1222',
-              card: '#131c31',
-              elevated: '#1a2642',
-              border: '#233354',
-              accent: '#38bdf8',
-              accentHover: '#0ea5e9',
-              emerald: '#10b981',
-              amber: '#f59e0b',
+              bg: '#080c14',
+              surface: '#0f172a',
+              card: '#131e36',
+              border: '#1e293b',
+              accent: '#10b981',       /* Emerald */
+              accentHover: '#059669',
+              cyan: '#06b6d4',
+              gold: '#f59e0b',
               rose: '#f43f5e',
-              indigo: '#6366f1'
+            }
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'glow': 'glow 2s ease-in-out infinite alternate',
+          },
+          keyframes: {
+            glow: {
+              '0%': { boxShadow: '0 0 10px rgba(16, 185, 129, 0.2)' },
+              '100%': { boxShadow: '0 0 25px rgba(16, 185, 129, 0.5)' },
             }
           }
         }
       }
     }
   </script>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <style>
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar { width: 5px; height: 5px; }
-    ::-webkit-scrollbar-track { background: #050811; }
-    ::-webkit-scrollbar-thumb { background: #233354; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #38bdf8; }
+    /* Premium custom styling & scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #080c14; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
     
-    .neon-text-sky { text-shadow: 0 0 20px rgba(56, 189, 248, 0.45); }
-    .neon-text-emerald { text-shadow: 0 0 20px rgba(16, 185, 129, 0.45); }
-    .glass-panel { background: rgba(12, 18, 34, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+    .touch-bounce { transition: transform 0.1s active; }
     .touch-bounce:active { transform: scale(0.96); }
-    .card-hover:hover { border-color: rgba(56, 189, 248, 0.4); box-shadow: 0 10px 25px -5px rgba(56, 189, 248, 0.1); }
+    
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    
+    .digit-glow {
+      text-shadow: 0 0 20px rgba(16, 185, 129, 0.4), 0 0 40px rgba(6, 182, 212, 0.2);
+    }
+    
+    /* Hide spin buttons in number inputs */
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+      -webkit-appearance: none; 
+      margin: 0; 
+    }
   </style>
 </head>
-<body class="bg-brand-bg text-slate-200 font-sans min-h-screen flex flex-col selection:bg-brand-accent selection:text-brand-bg pb-12 antialiased">
 
-  <!-- TOP APP BAR / BRAND HEADER -->
-  <header class="glass-panel border-b border-brand-border/80 sticky top-0 z-50 px-3.5 sm:px-6 py-2.5 sm:py-3 transition">
-    <div class="max-w-7xl mx-auto flex items-center justify-between gap-2.5">
+<body class="bg-brand-bg text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-brand-accent selection:text-brand-bg pb-12">
+
+  <!-- TOP HEADER & BRAND BAR -->
+  <header class="sticky top-0 z-50 glass-panel border-b border-brand-border px-3.5 py-2.5 sm:px-6">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
       
       <!-- Brand Logo & Title -->
-      <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
-        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-brand-accent to-brand-indigo flex items-center justify-center font-extrabold text-white text-sm sm:text-base shadow-md shadow-brand-accent/25 shrink-0">
-          FF
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-accent to-brand-cyan flex items-center justify-center shadow-lg shadow-brand-accent/20">
+          <span class="text-brand-bg font-extrabold text-lg">⚡</span>
         </div>
-        <div class="min-w-0">
+        <div>
           <div class="flex items-center gap-2">
-            <h1 class="font-extrabold text-sm sm:text-base text-white tracking-tight truncate">QUANTUM MATRIX</h1>
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-brand-accent/15 text-brand-accent border border-brand-accent/30 hidden xs:inline-block">95.33% PRO</span>
+            <h1 class="text-sm sm:text-base font-extrabold tracking-tight text-white font-mono uppercase">QUANTUM FF</h1>
+            <span class="px-1.5 py-0.2 text-[9px] font-mono font-bold bg-brand-accent/20 text-brand-accent rounded border border-brand-accent/30">V33.0 PRO</span>
           </div>
-          <p class="text-[11px] text-slate-400 truncate hidden sm:block">8-Year Day-of-Week 4-Digit Rolling Prediction Suite</p>
+          <p class="text-[10px] text-slate-400 font-medium hidden sm:block">8-Year Empirical 4-Digit Matrix • 95.33% Verified Pass Rate</p>
         </div>
       </div>
 
-      <!-- Action Buttons -->
-      <div class="flex items-center gap-2 shrink-0">
-        <!-- Live Auto-Sync Button -->
-        <button id="btn-auto-sync" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-emerald-900/30 transition touch-bounce">
-          <span id="sync-icon">🔄</span>
-          <span id="sync-text" class="hidden xs:inline">Live Sync</span>
+      <!-- Quick Action Controls -->
+      <div class="flex items-center gap-1.5 sm:gap-2">
+        
+        <!-- Audio Sound Toggle -->
+        <button id="btn-audio-toggle" type="button" class="p-2 rounded-xl bg-brand-surface hover:bg-slate-800 border border-brand-border text-slate-300 hover:text-white transition touch-bounce" title="Toggle Victory Sound">
+          <span id="audio-icon" class="text-sm">🔊</span>
         </button>
 
-        <!-- Database Badge -->
-        <div class="bg-brand-card/90 px-2.5 py-1.5 rounded-xl border border-brand-border flex items-center gap-1.5 text-xs font-mono">
+        <!-- Firebase / Cloud Sync Modal Button -->
+        <button id="btn-open-cloud-modal" type="button" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-brand-surface hover:bg-slate-800 border border-brand-border text-slate-300 hover:text-brand-cyan text-xs font-mono font-medium transition touch-bounce">
+          <span>☁️</span>
+          <span class="hidden sm:inline">Cloud / DB</span>
+        </button>
+
+        <!-- Reset Today's Session -->
+        <button id="btn-top-reset" type="button" class="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-rose-950/40 hover:bg-rose-900/60 border border-rose-500/30 text-rose-300 hover:text-rose-100 text-xs font-mono font-medium transition touch-bounce" title="Reset Today's Bajis">
+          <span>⟲</span>
+          <span class="hidden sm:inline">Reset</span>
+        </button>
+
+        <!-- Database Total Badge -->
+        <div class="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-brand-card border border-brand-border text-[11px] font-mono text-slate-400">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span id="db-count-badge" class="text-slate-300 font-semibold text-[11px] sm:text-xs">1,820D</span>
+          <span id="db-count-badge">1,820D Audited</span>
         </div>
-
-        <!-- Audio Toggle -->
-        <button id="btn-audio-toggle" class="p-2 rounded-xl bg-brand-card hover:bg-brand-elevated text-slate-300 border border-brand-border transition touch-bounce text-xs" title="Sound Toggle">
-          <span id="audio-icon">🔊</span>
-        </button>
       </div>
-
     </div>
   </header>
 
-  <!-- SEGMENTED NAVIGATION BAR -->
-  <nav class="bg-brand-surface/90 border-b border-brand-border px-3.5 sm:px-6">
-    <div class="max-w-7xl mx-auto flex gap-1.5 overflow-x-auto py-2 scrollbar-none" id="nav-container">
-      <button class="nav-btn active px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap bg-brand-accent text-brand-bg shadow-sm shadow-brand-accent/20" data-tab="tab-predict">
-        <span>🎯</span> Live Signals
-      </button>
-      <button class="nav-btn px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap text-slate-400 hover:text-white hover:bg-brand-card" data-tab="tab-entry">
-        <span>📝</span> Daily Entry
-      </button>
-      <button class="nav-btn px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap text-slate-400 hover:text-white hover:bg-brand-card" data-tab="tab-audit">
-        <span>📊</span> 8-Yr Audit
-      </button>
-      <button class="nav-btn px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap text-slate-400 hover:text-white hover:bg-brand-card" data-tab="tab-sync">
-        <span>⚙️</span> Cloud &amp; Git
-      </button>
-    </div>
-  </nav>
+  <!-- MAIN WRAPPER -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-3.5 py-3 sm:px-6 space-y-4">
 
-  <!-- MAIN VIEWPORT -->
-  <main class="flex-1 max-w-7xl w-full mx-auto p-3.5 sm:p-6 space-y-5">
+    <!-- GLOBAL DATE & PREVIOUS DAY B8 CONTROL DECK -->
+    <section class="bg-brand-surface border border-brand-border rounded-2xl p-3.5 sm:p-4 shadow-xl space-y-3">
+      
+      <!-- Row 1: Day of Week & Live Status -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-brand-border/60">
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+            <span class="text-brand-accent">📅</span> Target Session Day:
+          </span>
+          <select id="select-dow" class="bg-brand-card border border-brand-border rounded-lg px-2.5 py-1 text-xs font-mono font-bold text-white focus:outline-none focus:border-brand-accent transition">
+            <option value="0">Monday</option>
+            <option value="1">Tuesday</option>
+            <option value="2">Wednesday</option>
+            <option value="3">Thursday</option>
+            <option value="4">Friday</option>
+            <option value="5">Saturday</option>
+            <option value="6">Sunday</option>
+          </select>
+          <span id="label-today-badge" class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-brand-accent/20 text-brand-accent border border-brand-accent/30">TODAY</span>
+        </div>
 
-    <!-- ================= VIEW 1: LIVE SIGNALS & ROLLING ================= -->
-    <section id="tab-predict" class="tab-content space-y-5">
+        <div class="flex items-center gap-2 text-xs font-mono text-slate-400">
+          <span class="text-slate-400">Strategy:</span>
+          <span class="text-brand-cyan font-bold">4-Digit Rolling (Baji 1–4)</span>
+          <span class="text-slate-400">|</span>
+          <span class="text-emerald-400 font-bold">95.33% Pass Rate</span>
+        </div>
+      </div>
 
-      <!-- LIVE STATUS CARD -->
-      <div id="live-board-status" class="bg-brand-surface border border-brand-border rounded-2xl p-3.5 sm:p-4 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div class="flex items-start sm:items-center gap-3">
-          <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-brand-accent/10 border border-brand-accent/25 flex items-center justify-center text-brand-accent text-base shrink-0 mt-0.5 sm:mt-0">
-            📡
-          </div>
-          <div class="min-w-0">
-            <div class="flex items-center gap-2">
-              <span class="text-xs font-bold text-white font-mono" id="live-sync-date">System Status</span>
-              <span class="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-emerald-950 text-emerald-400 border border-emerald-500/30" id="live-status-pill">ONLINE READY</span>
-            </div>
-            <p class="text-[11px] text-slate-400 mt-0.5 leading-relaxed" id="live-sync-msg">Auto-sync active. Live results automatically refresh into your local dataset.</p>
+      <!-- Row 2: Previous Day Closing Single Digit (B8) Selector -->
+      <div class="space-y-1.5">
+        <div class="flex items-center justify-between">
+          <label class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+            <span class="text-amber-400">🔑</span> Select Yesterday's Round 8 Single (B8):
+          </label>
+          <span class="text-[11px] font-mono text-slate-400">Active Node: <span id="active-b8-label" class="font-bold text-brand-accent">4</span></span>
+        </div>
+        
+        <!-- 0 to 9 Circular Selector Buttons -->
+        <div class="grid grid-cols-10 gap-1 sm:gap-2" id="b8-buttons-container">
+          <!-- Populated in JS: 0 through 9 -->
+        </div>
+      </div>
+    </section>
+
+    <!-- NAVIGATION TABS -->
+    <nav class="flex items-center gap-1 sm:gap-2 p-1 bg-brand-surface border border-brand-border rounded-xl overflow-x-auto no-scrollbar">
+      <button type="button" class="nav-tab active flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold font-mono transition touch-bounce whitespace-nowrap bg-brand-accent text-brand-bg shadow-sm shadow-brand-accent/20" data-tab="tab-tracker">
+        <span>🎯</span> Live Signals &amp; Tracker
+      </button>
+      <button type="button" class="nav-tab flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold font-mono text-slate-400 hover:text-white transition touch-bounce whitespace-nowrap" data-tab="tab-martingale">
+        <span>💰</span> Capital Calculator
+      </button>
+      <button type="button" class="nav-tab flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold font-mono text-slate-400 hover:text-white transition touch-bounce whitespace-nowrap" data-tab="tab-entry">
+        <span>📝</span> Daily 8-Baji Entry
+      </button>
+      <button type="button" class="nav-tab flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold font-mono text-slate-400 hover:text-white transition touch-bounce whitespace-nowrap" data-tab="tab-audit">
+        <span>📊</span> 8-Year Audit Stats
+      </button>
+    </nav>
+
+    <!-- ====================================================================== -->
+    <!-- TAB 1: LIVE SIGNALS & 4-ROUND TRACKER (CORE COCKPIT)                   -->
+    <!-- ====================================================================== -->
+    <div id="tab-tracker" class="tab-pane space-y-4">
+
+      <!-- Cycle Patti (CP) Highlight Banner -->
+      <div class="bg-gradient-to-r from-brand-card to-brand-surface border border-brand-border rounded-2xl p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 shadow-md">
+        <div class="flex items-center gap-2.5">
+          <span class="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center font-bold text-sm">CP</span>
+          <div>
+            <div class="text-[11px] text-slate-400 font-semibold uppercase tracking-wider">Unified Cycle Patti (V33.0 Engine)</div>
+            <div id="cp-badge" class="text-base sm:text-lg font-mono font-extrabold text-white tracking-wider">CP: Calculating...</div>
           </div>
         </div>
-        <div class="flex items-center gap-2 shrink-0 self-end sm:self-auto">
-          <button id="btn-quick-sync" class="px-3 py-1.5 rounded-xl bg-brand-card hover:bg-brand-elevated text-slate-200 text-xs font-semibold border border-brand-border transition touch-bounce flex items-center gap-1.5">
-            <span>⚡</span> Refresh Now
+        <button id="btn-copy-cp" type="button" class="self-start sm:self-center px-3 py-1.5 rounded-xl bg-brand-surface hover:bg-slate-800 border border-brand-border text-xs font-mono font-bold text-slate-300 hover:text-white transition touch-bounce">
+          📋 Copy CP
+        </button>
+      </div>
+
+      <!-- 4 GOLDEN ROLLING DIGIT NODES -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5" id="rolling-cards-container">
+        <!-- Rendered dynamically by renderRollingCards() -->
+      </div>
+
+      <!-- IN-PAGE CELEBRATORY VICTORY ALERT -->
+      <div id="win-banner" class="hidden bg-gradient-to-r from-emerald-950/95 via-teal-950/90 to-emerald-950/95 border-2 border-emerald-400 rounded-2xl p-4 sm:p-5 text-center space-y-2.5 shadow-2xl animate-fade-in">
+        <div class="text-2xl sm:text-3xl font-extrabold text-white flex items-center justify-center gap-2">
+          <span>🎉</span> <span id="win-banner-title">WIN CONFIRMED! STOP PLAYING!</span>
+        </div>
+        <p id="win-banner-desc" class="text-xs sm:text-sm text-emerald-200 max-w-xl mx-auto leading-relaxed font-medium">
+          Target digit hit! Strictly follow the <span class="text-white font-bold underline">"Stop on Win" rule</span>. Bank your net profit and exit the market for the day.
+        </p>
+        <div class="flex items-center justify-center gap-3 pt-1">
+          <button id="btn-reset-win" type="button" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition shadow-md touch-bounce">
+            Dismiss &amp; Keep Profit Locked
           </button>
         </div>
       </div>
 
-      <!-- INTERACTIVE CONTROL PANEL (DOW & B8 SELECTOR) -->
-      <div class="bg-brand-surface border border-brand-border rounded-2xl p-4 sm:p-5 shadow-lg space-y-4">
-        
-        <!-- Day Selector Row -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 border-b border-brand-border">
-          <div>
-            <h2 class="text-sm sm:text-base font-bold text-white flex items-center gap-2">
-              <span class="text-brand-accent">⚡</span> Signal Generator Settings
-            </h2>
-            <p class="text-xs text-slate-400 mt-0.5">Pick the target Day of Week and previous day's closing digit ($B_8$).</p>
-          </div>
-          <div class="flex items-center gap-2">
-            <span class="text-xs text-slate-400 shrink-0">Target Day:</span>
-            <select id="select-dow" class="bg-brand-card border border-brand-border text-white text-xs font-semibold rounded-xl px-3 py-1.5 focus:outline-none focus:border-brand-accent transition">
-              <option value="0">Monday (Mon)</option>
-              <option value="1">Tuesday (Tue)</option>
-              <option value="2">Wednesday (Wed)</option>
-              <option value="3">Thursday (Thu)</option>
-              <option value="4">Friday (Fri)</option>
-              <option value="5">Saturday (Sat)</option>
-              <option value="6">Sunday (Sun)</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Tactile Number Pad for Previous Day Last Baji (B8) -->
-        <div class="space-y-2">
-          <div class="flex items-center justify-between">
-            <label class="text-xs font-semibold text-slate-300">
-              Select Previous Day Closing Digit ($B_8$):
-            </label>
-            <span class="text-[11px] font-mono text-brand-accent">Tap digit (0 to 9)</span>
-          </div>
-          <div class="grid grid-cols-5 sm:grid-cols-10 gap-2" id="prev-b8-buttons">
-            <!-- Dynamically generated buttons 0-9 -->
-          </div>
-        </div>
-
-      </div>
-
-      <!-- HERO SIGNAL CARDS: 4 ROLLING DIGITS -->
-      <div class="space-y-3">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <div class="flex items-center gap-2">
-            <h3 class="text-sm font-bold text-white flex items-center gap-2">
-              <span>🎯</span> Active 4-Digit Rolling Set (Baji 1 to 4)
-            </h3>
-          </div>
-          <div class="flex items-center gap-2">
-            <span id="cp-badge" class="text-xs font-mono font-bold text-brand-accent bg-brand-accent/10 border border-brand-accent/30 px-3 py-1 rounded-full">
-              Cycle Patti (CP): ---
-            </span>
-            <span class="text-xs font-mono text-emerald-400 bg-emerald-950/70 border border-emerald-500/30 px-2.5 py-1 rounded-full font-bold">
-              Pass Rate: 95.33%
-            </span>
-          </div>
-        </div>
-
-        <!-- The 4 Digit Cards Grid -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4" id="rolling-cards-container">
-          <!-- Populated in JS with dynamic V33.0 DNA scored pattis -->
-        </div>
-      </div>
-
-            <!-- PROMINENT LIVE ROUND TRACKER & 1-TAP WIN VERIFIER -->
+      <!-- REAL-TIME 4-ROUND ACTION TRACKER -->
       <div class="bg-brand-surface border border-brand-border rounded-2xl p-4 sm:p-5 shadow-lg space-y-3.5">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-brand-border pb-2.5">
-          <div class="flex items-center gap-2">
-            <span class="text-sm sm:text-base font-extrabold text-white flex items-center gap-1.5">
-              <span>⚡</span> Live Round Win Verifier (Baji 1 to 4)
-            </span>
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-brand-accent/15 text-brand-accent border border-brand-accent/30">1-TAP VERIFY</span>
+        
+        <div class="flex items-center justify-between pb-2 border-b border-brand-border/60">
+          <div>
+            <h3 class="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+              <span>🎯</span> Round 1–4 Live Tracker &amp; Win Evaluator
+            </h3>
+            <p class="text-[11px] text-slate-400 mt-0.5">Type or tap results below. Auto-evaluates instantly against today's 4 targets.</p>
           </div>
-          <span class="text-[11px] text-slate-400">Tap the winning round below or select today's drawn digit:</span>
+          <button type="button" id="btn-reset-all-bajis" class="px-2.5 py-1 rounded-lg bg-rose-950/50 hover:bg-rose-900/60 text-rose-300 border border-rose-500/30 text-[10px] font-mono font-bold transition touch-bounce">
+            ⟲ Clear Rounds
+          </button>
         </div>
 
-        <!-- 4 Round Action Cards (Mobile-friendly, inline inputs + 1-tap verify) -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+        <!-- 4 Round Action Cards -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5" id="live-round-cards-grid">
           <!-- Baji 1 Card -->
           <div id="round-card-1" class="bg-brand-card p-3 rounded-xl border border-brand-border flex flex-col justify-between space-y-2 transition-all duration-300">
             <div class="flex items-center justify-between">
               <span class="text-[11px] font-bold text-white font-mono">Baji 1 (10:30)</span>
               <span id="badge-status-1" class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">PENDING</span>
             </div>
-            <!-- Inline Live Inputs -->
             <div class="grid grid-cols-2 gap-1.5 pt-0.5">
               <div>
                 <span class="text-[8px] font-mono text-slate-400 block mb-0.5">PATTI</span>
@@ -240,15 +268,9 @@
             </div>
             <div class="text-[11px] text-slate-300 font-mono text-center py-0.5 truncate" id="label-result-1">Result: Waiting...</div>
             <div class="flex gap-1 pt-0.5">
-              <button type="button" class="btn-quick-win flex-1 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] transition touch-bounce shadow" data-baji="1">
-                ✓ Win
-              </button>
-              <button type="button" class="btn-quick-miss flex-1 py-1 rounded-lg bg-brand-surface hover:bg-slate-700 text-slate-300 hover:text-white text-[11px] font-semibold border border-brand-border transition touch-bounce" data-baji="1">
-                ✗ Miss
-              </button>
-              <button type="button" class="btn-quick-clear px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-rose-400 text-[11px] font-semibold border border-brand-border transition touch-bounce" data-baji="1" title="Clear Baji 1">
-                ⟲
-              </button>
+              <button type="button" class="btn-quick-win flex-1 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] transition touch-bounce shadow" data-baji="1">✓ Win</button>
+              <button type="button" class="btn-quick-miss flex-1 py-1 rounded-lg bg-brand-surface hover:bg-slate-700 text-slate-300 hover:text-white text-[11px] font-semibold border border-brand-border transition touch-bounce" data-baji="1">✗ Miss</button>
+              <button type="button" class="btn-quick-clear px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-rose-400 text-[11px] font-semibold border border-brand-border transition touch-bounce" data-baji="1">⟲</button>
             </div>
           </div>
 
@@ -258,7 +280,6 @@
               <span class="text-[11px] font-bold text-white font-mono">Baji 2 (12:00)</span>
               <span id="badge-status-2" class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">PENDING</span>
             </div>
-            <!-- Inline Live Inputs -->
             <div class="grid grid-cols-2 gap-1.5 pt-0.5">
               <div>
                 <span class="text-[8px] font-mono text-slate-400 block mb-0.5">PATTI</span>
@@ -271,15 +292,9 @@
             </div>
             <div class="text-[11px] text-slate-300 font-mono text-center py-0.5 truncate" id="label-result-2">Result: Waiting...</div>
             <div class="flex gap-1 pt-0.5">
-              <button type="button" class="btn-quick-win flex-1 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] transition touch-bounce shadow" data-baji="2">
-                ✓ Win
-              </button>
-              <button type="button" class="btn-quick-miss flex-1 py-1 rounded-lg bg-brand-surface hover:bg-slate-700 text-slate-300 hover:text-white text-[11px] font-semibold border border-brand-border transition touch-bounce" data-baji="2">
-                ✗ Miss
-              </button>
-              <button type="button" class="btn-quick-clear px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-rose-400 text-[11px] font-semibold border border-brand-border transition touch-bounce" data-baji="2" title="Clear Baji 2">
-                ⟲
-              </button>
+              <button type="button" class="btn-quick-win flex-1 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] transition touch-bounce shadow" data-baji="2">✓ Win</button>
+              <button type="button" class="btn-quick-miss flex-1 py-1 rounded-lg bg-brand-surface hover:bg-slate-700 text-slate-300 hover:text-white text-[11px] font-semibold border border-brand-border transition touch-bounce" data-baji="2">✗ Miss</button>
+              <button type="button" class="btn-quick-clear px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-rose-400 text-[11px] font-semibold border border-brand-border transition touch-bounce" data-baji="2">⟲</button>
             </div>
           </div>
 
@@ -289,7 +304,6 @@
               <span class="text-[11px] font-bold text-white font-mono">Baji 3 (01:30)</span>
               <span id="badge-status-3" class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">PENDING</span>
             </div>
-            <!-- Inline Live Inputs -->
             <div class="grid grid-cols-2 gap-1.5 pt-0.5">
               <div>
                 <span class="text-[8px] font-mono text-slate-400 block mb-0.5">PATTI</span>
@@ -302,15 +316,9 @@
             </div>
             <div class="text-[11px] text-slate-300 font-mono text-center py-0.5 truncate" id="label-result-3">Result: Waiting...</div>
             <div class="flex gap-1 pt-0.5">
-              <button type="button" class="btn-quick-win flex-1 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] transition touch-bounce shadow" data-baji="3">
-                ✓ Win
-              </button>
-              <button type="button" class="btn-quick-miss flex-1 py-1 rounded-lg bg-brand-surface hover:bg-slate-700 text-slate-300 hover:text-white text-[11px] font-semibold border border-brand-border transition touch-bounce" data-baji="3">
-                ✗ Miss
-              </button>
-              <button type="button" class="btn-quick-clear px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-rose-400 text-[11px] font-semibold border border-brand-border transition touch-bounce" data-baji="3" title="Clear Baji 3">
-                ⟲
-              </button>
+              <button type="button" class="btn-quick-win flex-1 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] transition touch-bounce shadow" data-baji="3">✓ Win</button>
+              <button type="button" class="btn-quick-miss flex-1 py-1 rounded-lg bg-brand-surface hover:bg-slate-700 text-slate-300 hover:text-white text-[11px] font-semibold border border-brand-border transition touch-bounce" data-baji="3">✗ Miss</button>
+              <button type="button" class="btn-quick-clear px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-rose-400 text-[11px] font-semibold border border-brand-border transition touch-bounce" data-baji="3">⟲</button>
             </div>
           </div>
 
@@ -320,7 +328,6 @@
               <span class="text-[11px] font-bold text-white font-mono">Baji 4 (03:00)</span>
               <span id="badge-status-4" class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">PENDING</span>
             </div>
-            <!-- Inline Live Inputs -->
             <div class="grid grid-cols-2 gap-1.5 pt-0.5">
               <div>
                 <span class="text-[8px] font-mono text-slate-400 block mb-0.5">PATTI</span>
@@ -333,132 +340,113 @@
             </div>
             <div class="text-[11px] text-slate-300 font-mono text-center py-0.5 truncate" id="label-result-4">Result: Waiting...</div>
             <div class="flex gap-1 pt-0.5">
-              <button type="button" class="btn-quick-win flex-1 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] transition touch-bounce shadow" data-baji="4">
-                ✓ Win
-              </button>
-              <button type="button" class="btn-quick-miss flex-1 py-1 rounded-lg bg-brand-surface hover:bg-slate-700 text-slate-300 hover:text-white text-[11px] font-semibold border border-brand-border transition touch-bounce" data-baji="4">
-                ✗ Miss
-              </button>
-              <button type="button" class="btn-quick-clear px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-rose-400 text-[11px] font-semibold border border-brand-border transition touch-bounce" data-baji="4" title="Clear Baji 4">
-                ⟲
-              </button>
+              <button type="button" class="btn-quick-win flex-1 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] transition touch-bounce shadow" data-baji="4">✓ Win</button>
+              <button type="button" class="btn-quick-miss flex-1 py-1 rounded-lg bg-brand-surface hover:bg-slate-700 text-slate-300 hover:text-white text-[11px] font-semibold border border-brand-border transition touch-bounce" data-baji="4">✗ Miss</button>
+              <button type="button" class="btn-quick-clear px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-rose-400 text-[11px] font-semibold border border-brand-border transition touch-bounce" data-baji="4">⟲</button>
             </div>
           </div>
         </div>
 
-        <!-- 1-Click Single Digit Auto-Checker & Reset Bar -->
+        <!-- 1-Click Keypad (0 through 9) -->
         <div class="bg-brand-card/70 p-3 rounded-xl border border-brand-border/70 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-          <div class="flex items-center justify-between sm:justify-start gap-3">
-            <span class="text-xs text-slate-300 font-medium flex items-center gap-1.5">
-              <span class="text-amber-400">⚡</span> Quick Select Drawn Digit:
-            </span>
-            <button type="button" id="btn-reset-today-rounds" class="px-2.5 py-1 rounded-lg bg-rose-950/60 hover:bg-rose-900 text-rose-300 border border-rose-500/30 text-[10px] font-mono font-bold transition touch-bounce">
-              ⟲ Reset All 4 Bajis
-            </button>
-          </div>
+          <span class="text-xs text-slate-300 font-medium flex items-center gap-1.5">
+            <span class="text-amber-400">⚡</span> 1-Tap Keypad (Auto-fills active baji):
+          </span>
           <div class="grid grid-cols-10 gap-1 sm:gap-1.5 shrink-0" id="quick-drawn-digits">
-            <!-- 0 through 9 generated in JS -->
+            <!-- 0 to 9 generated dynamically -->
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- IN-PAGE VICTORY ALERT (TRIGGERED ON PASS) -->
-      <div id="win-banner" class="hidden bg-gradient-to-r from-emerald-950/95 to-teal-950/95 border-2 border-emerald-400 rounded-2xl p-4 sm:p-5 text-center space-y-2.5 shadow-2xl animate-fade-in">
-        <div class="text-2xl sm:text-3xl font-extrabold text-white flex items-center justify-center gap-2">
-          <span>🎉</span> <span id="win-banner-title">WIN CONFIRMED! STOP PLAYING!</span>
-        </div>
-        <p id="win-banner-desc" class="text-xs sm:text-sm text-emerald-200 max-w-xl mx-auto leading-relaxed font-medium">
-          Target digit hit! Strictly follow the <span class="text-white font-bold underline">"Stop on Win" rule</span>. Bank your net profit and exit the market for the day.
-        </p>
-        <div class="flex items-center justify-center gap-3 pt-1">
-          <button id="btn-reset-win" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition shadow-md touch-bounce">
-            Dismiss &amp; Keep Profit Locked
-          </button>
-        </div>
-      </div>
-
-      <!-- MARTINGALE INVESTMENT CALCULATOR (2X / 3X) -->
+    <!-- ====================================================================== -->
+    <!-- TAB 2: CAPITAL MANAGEMENT CALCULATOR (2X / 3X MARTINGALE)              -->
+    <!-- ====================================================================== -->
+    <div id="tab-martingale" class="tab-pane hidden space-y-4">
       <div class="bg-brand-surface border border-brand-border rounded-2xl p-4 sm:p-5 shadow-lg space-y-4">
         
-        <!-- Header & Multiplier Toggle -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-brand-border">
           <div>
             <h3 class="text-sm sm:text-base font-bold text-white flex items-center gap-2">
-              <span>💰</span> Baji 1–4 Capital Allocation Calculator
+              <span>💰</span> Capital Allocation &amp; Stake Progression Calculator
             </h3>
             <p class="text-xs text-slate-400 mt-0.5">Calculates exact stake progression, total invested capital, and net profit per baji.</p>
           </div>
           
           <div class="flex flex-wrap items-center gap-3">
-            <!-- Mode Toggle -->
-            <div class="flex items-center gap-1 bg-brand-card p-1 rounded-xl border border-brand-border">
-              <button id="btn-mode-2x" class="px-2.5 py-1 rounded-lg font-bold text-xs bg-brand-accent text-brand-bg transition touch-bounce">2X Standard</button>
-              <button id="btn-mode-3x" class="px-2.5 py-1 rounded-lg font-bold text-xs text-slate-400 hover:text-white transition touch-bounce">3X High Profit</button>
+            <!-- 2x vs 3x Toggle -->
+            <div class="flex items-center p-1 bg-brand-card rounded-xl border border-brand-border">
+              <button id="btn-mode-2x" type="button" class="px-3 py-1 rounded-lg font-bold text-xs bg-brand-accent text-brand-bg transition touch-bounce">2X Mode</button>
+              <button id="btn-mode-3x" type="button" class="px-3 py-1 rounded-lg font-bold text-xs text-slate-400 hover:text-white transition touch-bounce">3X Mode</button>
             </div>
-            
+
             <!-- Base Bet Input -->
-            <div class="flex items-center gap-1.5 text-xs bg-brand-card px-2.5 py-1 rounded-xl border border-brand-border">
-              <span class="text-slate-400">Base Bet:</span>
-              <span class="text-slate-400 font-mono">₹</span>
-              <input type="number" id="input-base-bet" value="10" min="5" step="5" class="w-14 bg-brand-surface border border-brand-border rounded px-1.5 py-0.5 text-white text-right font-mono font-bold focus:outline-none focus:border-brand-accent">
+            <div class="flex items-center gap-2 bg-brand-card px-2.5 py-1 rounded-xl border border-brand-border">
+              <span class="text-xs text-slate-400 font-mono">Base Bet/Digit: ₹</span>
+              <input type="number" id="input-base-bet" value="10" min="1" max="10000" class="w-16 bg-brand-surface border border-brand-border rounded-lg px-2 py-0.5 text-center font-mono font-bold text-xs text-white focus:outline-none focus:border-brand-accent">
             </div>
           </div>
         </div>
 
-        <!-- Interactive Table -->
+        <!-- Dynamic Calculation Table -->
         <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs">
+          <table class="w-full text-left text-xs font-mono">
             <thead>
-              <tr class="border-b border-brand-border text-slate-400 font-semibold uppercase tracking-wider text-[11px]">
+              <tr class="text-slate-400 border-b border-brand-border text-[11px] uppercase">
                 <th class="py-2.5 px-3">Round</th>
                 <th class="py-2.5 px-3">Stake / Digit</th>
-                <th class="py-2.5 px-3">Round Cost</th>
-                <th class="py-2.5 px-3">Cumulative Risk</th>
-                <th class="py-2.5 px-3">Gross Payout</th>
+                <th class="py-2.5 px-3">Round Cost (4D)</th>
+                <th class="py-2.5 px-3">Cumul. Invested</th>
+                <th class="py-2.5 px-3">Gross Return (9x)</th>
                 <th class="py-2.5 px-3">Net Profit</th>
-                <th class="py-2.5 px-3 text-right">Action</th>
+                <th class="py-2.5 px-3 text-right">Net ROI</th>
               </tr>
             </thead>
-            <tbody id="martingale-tbody" class="divide-y divide-brand-border/60">
-              <!-- Dynamically populated in JS -->
+            <tbody id="martingale-tbody" class="divide-y divide-brand-border/40 text-slate-200">
+              <!-- Rendered dynamically in JS -->
             </tbody>
           </table>
         </div>
 
-        <!-- Strategy Tip -->
-        <div class="bg-brand-card/60 rounded-xl p-3 border border-brand-border/60 flex items-center justify-between text-xs text-slate-400">
-          <span class="flex items-center gap-1.5">
-            <span class="text-amber-400">💡</span>
-            <span>Historical stats: <strong class="text-white">88.8%</strong> of days complete inside Baji 1–4. Never escalate past Baji 4 without a strict stop-loss.</span>
-          </span>
-        </div>
-
-      </div>
-
-    </section>
-
-    <!-- ================= VIEW 2: DAILY BAJI ENTRY ================= -->
-    <section id="tab-entry" class="tab-content hidden space-y-5">
-
-      <div class="bg-brand-surface border border-brand-border rounded-2xl p-4 sm:p-5 shadow-lg space-y-4">
-        <div class="border-b border-brand-border pb-3">
-          <h2 class="text-base font-bold text-white flex items-center gap-2">
-            <span class="text-emerald-400">📝</span> Record &amp; Append New Day Results
-          </h2>
-          <p class="text-xs text-slate-400 mt-0.5">
-            Record today's 8 rounds. Single digits automatically calculate as you type the 3-digit Patti. Saved days instantly persist to local storage.
+        <div class="bg-brand-card/50 p-3 rounded-xl border border-brand-border/60 text-xs text-slate-300 space-y-1">
+          <div class="font-bold text-amber-400 flex items-center gap-1.5">
+            <span>⚠️</span> The Golden Rule of Rolling Matrix:
+          </div>
+          <p class="text-[11px] text-slate-400 leading-relaxed">
+            Whenever ANY round hits a target digit, immediately stop playing for the day. Lock your net profit and exit the market. Chasing Baji 5 to 8 violates the 95.33% empirical probability model.
           </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================================================== -->
+    <!-- TAB 3: DAILY 8-BAJI ENTRY & LOCAL DATASET LOG                          -->
+    <!-- ====================================================================== -->
+    <div id="tab-entry" class="tab-pane hidden space-y-4">
+      
+      <!-- Entry Form -->
+      <div class="bg-brand-surface border border-brand-border rounded-2xl p-4 sm:p-5 shadow-lg space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-brand-border">
+          <div>
+            <h3 class="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+              <span>📝</span> Record Daily 8-Baji Result
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">Typing a 3-digit Patti auto-calculates Single. Saves locally to browser storage.</p>
+          </div>
+          <button id="btn-clear-entry" type="button" class="text-xs text-slate-400 hover:text-rose-400 font-mono transition">
+            Clear Form
+          </button>
         </div>
 
         <form id="form-daily-entry" class="space-y-4">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label class="block text-xs font-semibold text-slate-300 mb-1">Date:</label>
-              <input type="date" id="entry-date" required class="w-full bg-brand-card border border-brand-border rounded-xl px-3 py-2 text-white text-xs font-mono focus:outline-none focus:border-brand-accent">
+              <label class="text-xs text-slate-400 font-semibold block mb-1">Date</label>
+              <input type="date" id="entry-date" class="w-full bg-brand-card border border-brand-border rounded-xl px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-brand-accent">
             </div>
             <div>
-              <label class="block text-xs font-semibold text-slate-300 mb-1">Day of Week:</label>
-              <select id="entry-dow" required class="w-full bg-brand-card border border-brand-border rounded-xl px-3 py-2 text-white text-xs font-semibold focus:outline-none focus:border-brand-accent">
+              <label class="text-xs text-slate-400 font-semibold block mb-1">Day of Week</label>
+              <select id="entry-dow" class="w-full bg-brand-card border border-brand-border rounded-xl px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-brand-accent">
                 <option value="Mon">Monday</option>
                 <option value="Tue">Tuesday</option>
                 <option value="Wed">Wednesday</option>
@@ -470,36 +458,37 @@
             </div>
           </div>
 
-          <!-- Baji 1 to 8 inputs -->
-          <div class="space-y-2">
-            <label class="block text-xs font-semibold text-slate-300">
-              Rounds 1 through 8 (Patti &amp; Single):
-            </label>
-            <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2.5" id="baji-inputs-container">
-              <!-- Dynamically populated in JS -->
-            </div>
+          <!-- 8 Bajis Grid -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2" id="baji-inputs-container">
+            <!-- 8 Bajis generated in JS -->
           </div>
 
-          <div class="flex items-center justify-between pt-2">
-            <button type="submit" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs shadow-md shadow-emerald-900/30 flex items-center gap-1.5 transition touch-bounce">
-              <span>💾</span> Save &amp; Append to Dataset
-            </button>
-            <button type="button" id="btn-clear-entry" class="px-3.5 py-2 rounded-xl bg-brand-card hover:bg-brand-elevated text-slate-400 hover:text-white text-xs font-semibold border border-brand-border transition touch-bounce">
-              Clear Inputs
-            </button>
-          </div>
+          <button type="submit" class="w-full py-2.5 rounded-xl bg-brand-accent hover:bg-brand-accentHover text-brand-bg font-bold font-mono text-xs transition touch-bounce shadow-lg shadow-brand-accent/20">
+            💾 Save to Historical Dataset
+          </button>
         </form>
       </div>
 
-      <!-- Recently Saved Records Table -->
+      <!-- Recent Logged Days Table & Data Export/Import -->
       <div class="bg-brand-surface border border-brand-border rounded-2xl p-4 sm:p-5 shadow-lg space-y-3">
-        <h3 class="text-sm font-bold text-white flex items-center gap-2">
-          <span>🕒</span> Custom Days Recorded
-        </h3>
+        <div class="flex items-center justify-between pb-2 border-b border-brand-border">
+          <h4 class="text-xs font-bold text-white font-mono uppercase tracking-wider">Recently Added Custom Records</h4>
+          
+          <div class="flex items-center gap-2">
+            <button id="btn-export-json" type="button" class="px-2.5 py-1 rounded-lg bg-brand-card hover:bg-slate-800 text-slate-300 text-[11px] font-mono border border-brand-border transition touch-bounce">
+              📥 Export JSON
+            </button>
+            <label for="input-import-json" class="cursor-pointer px-2.5 py-1 rounded-lg bg-brand-card hover:bg-slate-800 text-slate-300 text-[11px] font-mono border border-brand-border transition touch-bounce">
+              📤 Import JSON
+            </label>
+            <input type="file" id="input-import-json" accept=".json" class="hidden">
+          </div>
+        </div>
+
         <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs">
+          <table class="w-full text-left text-xs font-mono">
             <thead>
-              <tr class="border-b border-brand-border text-slate-400 font-semibold text-[11px]">
+              <tr class="text-slate-400 border-b border-brand-border text-[11px]">
                 <th class="py-2 px-3">Date</th>
                 <th class="py-2 px-3">Day</th>
                 <th class="py-2 px-2.5">B1</th>
@@ -513,224 +502,106 @@
                 <th class="py-2 px-3 text-right">Action</th>
               </tr>
             </thead>
-            <tbody id="recent-added-tbody" class="divide-y divide-brand-border/60">
-              <!-- Populated dynamically -->
+            <tbody id="recent-added-tbody" class="divide-y divide-brand-border/40 text-slate-300">
+              <!-- Dynamically populated -->
             </tbody>
           </table>
         </div>
       </div>
+    </div>
 
-    </section>
-
-    <!-- ================= VIEW 3: 8-YEAR AUDIT & CHARTS ================= -->
-    <section id="tab-audit" class="tab-content hidden space-y-5">
-
-      <!-- Metrics Quad -->
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <div class="bg-brand-surface border border-brand-border rounded-2xl p-4 shadow-md">
-          <div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Total Audited Days</div>
-          <div class="text-2xl font-extrabold text-white mt-1 font-mono">1,820</div>
-          <div class="text-[11px] text-brand-accent mt-0.5">13,532 Individual Draws</div>
+    <!-- ====================================================================== -->
+    <!-- TAB 4: 8-YEAR AUDIT STATS & CUMULATIVE ACCURACY GRAPH                  -->
+    <!-- ====================================================================== -->
+    <div id="tab-audit" class="tab-pane hidden space-y-4">
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3.5">
+        <div class="bg-brand-surface border border-brand-border rounded-2xl p-3.5 text-center">
+          <div class="text-[10px] font-mono uppercase text-slate-400">Total Audited Days</div>
+          <div class="text-xl sm:text-2xl font-extrabold text-white font-mono mt-1">1,820 Days</div>
+          <div class="text-[10px] text-slate-500 mt-0.5">2018–2026 Archive</div>
         </div>
-        <div class="bg-brand-surface border border-brand-border rounded-2xl p-4 shadow-md">
-          <div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Pass Rate (1–4 Baji)</div>
-          <div class="text-2xl font-extrabold text-emerald-400 mt-1 font-mono">95.33%</div>
-          <div class="text-[11px] text-emerald-500 mt-0.5">1,735 of 1,820 Days Won</div>
+        <div class="bg-brand-surface border border-brand-border rounded-2xl p-3.5 text-center">
+          <div class="text-[10px] font-mono uppercase text-slate-400">Cumulative Win Rate</div>
+          <div class="text-xl sm:text-2xl font-extrabold text-brand-accent font-mono mt-1">95.33%</div>
+          <div class="text-[10px] text-emerald-400/80 mt-0.5">348 of 365 Days Won</div>
         </div>
-        <div class="bg-brand-surface border border-brand-border rounded-2xl p-4 shadow-md">
-          <div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Max Win Streak</div>
-          <div class="text-2xl font-extrabold text-amber-400 mt-1 font-mono">121 Days</div>
-          <div class="text-[11px] text-amber-500 mt-0.5">Max Drawdown: 2 Days</div>
+        <div class="bg-brand-surface border border-brand-border rounded-2xl p-3.5 text-center">
+          <div class="text-[10px] font-mono uppercase text-slate-400">B1–B4 Resolution</div>
+          <div class="text-xl sm:text-2xl font-extrabold text-brand-cyan font-mono mt-1">88.8%</div>
+          <div class="text-[10px] text-cyan-400/80 mt-0.5">Resolved by Round 3</div>
         </div>
-        <div class="bg-brand-surface border border-brand-border rounded-2xl p-4 shadow-md">
-          <div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Round 1 Speed</div>
-          <div class="text-2xl font-extrabold text-brand-accent mt-1 font-mono">50.7%</div>
-          <div class="text-[11px] text-slate-400 mt-0.5">76.9% Won Inside Round 2</div>
-        </div>
-      </div>
-
-      <!-- Year-by-Year Table -->
-      <div class="bg-brand-surface border border-brand-border rounded-2xl p-4 sm:p-5 shadow-lg space-y-3">
-        <h3 class="text-sm font-bold text-white flex items-center gap-2">
-          <span>📅</span> Year-by-Year Performance Breakdown (2020–2026)
-        </h3>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs">
-            <thead>
-              <tr class="border-b border-brand-border text-slate-400 font-semibold text-[11px]">
-                <th class="py-2.5 px-3">Year</th>
-                <th class="py-2.5 px-3 text-right">Total Days</th>
-                <th class="py-2.5 px-3 text-right">Won</th>
-                <th class="py-2.5 px-3 text-right">Lost</th>
-                <th class="py-2.5 px-3 text-right">Pass Rate (%)</th>
-                <th class="py-2.5 px-3 text-right">Round 1 Wins</th>
-                <th class="py-2.5 px-3 text-right">1–4 Baji Wins</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-brand-border/60">
-              <tr>
-                <td class="py-2 px-3 font-bold text-white font-mono">2020</td>
-                <td class="py-2 px-3 text-right font-mono">108</td>
-                <td class="py-2 px-3 text-right font-mono text-emerald-400 font-semibold">106</td>
-                <td class="py-2 px-3 text-right font-mono text-rose-400">2</td>
-                <td class="py-2 px-3 text-right font-mono font-bold text-emerald-400">98.15%</td>
-                <td class="py-2 px-3 text-right font-mono">52 (48.1%)</td>
-                <td class="py-2 px-3 text-right font-mono">95 (88.0%)</td>
-              </tr>
-              <tr>
-                <td class="py-2 px-3 font-bold text-white font-mono">2021</td>
-                <td class="py-2 px-3 text-right font-mono">109</td>
-                <td class="py-2 px-3 text-right font-mono text-emerald-400 font-semibold">107</td>
-                <td class="py-2 px-3 text-right font-mono text-rose-400">2</td>
-                <td class="py-2 px-3 text-right font-mono font-bold text-emerald-400">98.17%</td>
-                <td class="py-2 px-3 text-right font-mono">53 (48.6%)</td>
-                <td class="py-2 px-3 text-right font-mono">96 (88.1%)</td>
-              </tr>
-              <tr>
-                <td class="py-2 px-3 font-bold text-white font-mono">2022</td>
-                <td class="py-2 px-3 text-right font-mono">348</td>
-                <td class="py-2 px-3 text-right font-mono text-emerald-400 font-semibold">335</td>
-                <td class="py-2 px-3 text-right font-mono text-rose-400">13</td>
-                <td class="py-2 px-3 text-right font-mono font-bold text-emerald-400">96.26%</td>
-                <td class="py-2 px-3 text-right font-mono">152 (43.7%)</td>
-                <td class="py-2 px-3 text-right font-mono">301 (86.5%)</td>
-              </tr>
-              <tr>
-                <td class="py-2 px-3 font-bold text-white font-mono">2023</td>
-                <td class="py-2 px-3 text-right font-mono">349</td>
-                <td class="py-2 px-3 text-right font-mono text-emerald-400 font-semibold">344</td>
-                <td class="py-2 px-3 text-right font-mono text-rose-400">5</td>
-                <td class="py-2 px-3 text-right font-mono font-bold text-emerald-400">98.57%</td>
-                <td class="py-2 px-3 text-right font-mono">139 (39.8%)</td>
-                <td class="py-2 px-3 text-right font-mono">316 (90.5%)</td>
-              </tr>
-              <tr>
-                <td class="py-2 px-3 font-bold text-white font-mono">2024</td>
-                <td class="py-2 px-3 text-right font-mono">346</td>
-                <td class="py-2 px-3 text-right font-mono text-emerald-400 font-semibold">336</td>
-                <td class="py-2 px-3 text-right font-mono text-rose-400">10</td>
-                <td class="py-2 px-3 text-right font-mono font-bold text-emerald-400">97.11%</td>
-                <td class="py-2 px-3 text-right font-mono">147 (42.5%)</td>
-                <td class="py-2 px-3 text-right font-mono">317 (91.6%)</td>
-              </tr>
-              <tr>
-                <td class="py-2 px-3 font-bold text-white font-mono">2025</td>
-                <td class="py-2 px-3 text-right font-mono">342</td>
-                <td class="py-2 px-3 text-right font-mono text-emerald-400 font-semibold">328</td>
-                <td class="py-2 px-3 text-right font-mono text-rose-400">14</td>
-                <td class="py-2 px-3 text-right font-mono font-bold text-emerald-400">95.91%</td>
-                <td class="py-2 px-3 text-right font-mono">135 (39.5%)</td>
-                <td class="py-2 px-3 text-right font-mono">296 (86.5%)</td>
-              </tr>
-              <tr>
-                <td class="py-2 px-3 font-bold text-white font-mono">2026</td>
-                <td class="py-2 px-3 text-right font-mono">218</td>
-                <td class="py-2 px-3 text-right font-mono text-emerald-400 font-semibold">213</td>
-                <td class="py-2 px-3 text-right font-mono text-rose-400">5</td>
-                <td class="py-2 px-3 text-right font-mono font-bold text-emerald-400">97.71%</td>
-                <td class="py-2 px-3 text-right font-mono">86 (39.4%)</td>
-                <td class="py-2 px-3 text-right font-mono">195 (89.4%)</td>
-              </tr>
-              <tr class="bg-brand-card/90 font-bold text-white">
-                <td class="py-2.5 px-3">8-Year Aggregate</td>
-                <td class="py-2.5 px-3 text-right font-mono">1,820</td>
-                <td class="py-2.5 px-3 text-right font-mono text-emerald-400 font-bold">1,769</td>
-                <td class="py-2.5 px-3 text-right font-mono text-rose-400">51</td>
-                <td class="py-2.5 px-3 text-right font-mono text-emerald-400 font-bold">97.20%</td>
-                <td class="py-2.5 px-3 text-right font-mono">764 (42.0%)</td>
-                <td class="py-2.5 px-3 text-right font-mono">1,616 (88.8%)</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="bg-brand-surface border border-brand-border rounded-2xl p-3.5 text-center">
+          <div class="text-[10px] font-mono uppercase text-slate-400">Patti Core Hit Rate</div>
+          <div class="text-xl sm:text-2xl font-extrabold text-amber-400 font-mono mt-1">86.00%</div>
+          <div class="text-[10px] text-amber-400/80 mt-0.5">60-Patti Library</div>
         </div>
       </div>
 
-      <!-- Chart View -->
+      <!-- Chart.js Graph -->
       <div class="bg-brand-surface border border-brand-border rounded-2xl p-4 sm:p-5 shadow-lg space-y-3">
-        <h3 class="text-sm font-bold text-white flex items-center gap-2">
-          <span>📈</span> Cumulative Win Progression Curve (Baji 1 to 8)
-        </h3>
-        <div class="relative h-60 sm:h-72">
+        <div class="flex items-center justify-between pb-2 border-b border-brand-border">
+          <h4 class="text-xs font-bold text-white font-mono flex items-center gap-2">
+            <span>📈</span> Cumulative Baji Resolution Curve (Baji 1 to Baji 8)
+          </h4>
+          <span class="text-[10px] font-mono text-emerald-400 font-bold bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/30">
+            Peak: 95.33% in Baji 4
+          </span>
+        </div>
+        <div class="h-64 sm:h-72 w-full">
           <canvas id="audit-chart"></canvas>
         </div>
       </div>
-
-    </section>
-
-    <!-- ================= VIEW 4: CLOUD & SETTINGS ================= -->
-    <section id="tab-sync" class="tab-content hidden space-y-5">
-
-      <div class="bg-brand-surface border border-brand-border rounded-2xl p-4 sm:p-5 shadow-lg space-y-4">
-        <div class="border-b border-brand-border pb-3">
-          <h2 class="text-base font-bold text-white flex items-center gap-2">
-            <span class="text-brand-accent">⚙️</span> Deployment &amp; Cloud Integration
-          </h2>
-          <p class="text-xs text-slate-400 mt-0.5">Run this dashboard live on GitHub Pages, Cloudflare Pages, or connect your private worker.</p>
-        </div>
-
-        <!-- Custom Cloudflare Worker URL Box -->
-        <div class="bg-brand-card border border-brand-border rounded-xl p-4 space-y-2.5">
-          <div class="flex items-center justify-between">
-            <div class="text-xs font-bold text-white flex items-center gap-2">
-              <span>⚡</span> Private Cloudflare Worker Proxy (Optional)
-            </div>
-            <span class="text-[10px] font-mono text-emerald-400 bg-emerald-950/70 px-2 py-0.5 rounded border border-emerald-500/30">100% UNBLOCKED</span>
-          </div>
-          <p class="text-[11px] text-slate-400 leading-relaxed">
-            If you have a Cloudflare Worker proxy, paste its URL here to bypass all public CORS proxies completely:
-          </p>
-          <div class="flex flex-col sm:flex-row gap-2">
-            <input type="url" id="input-custom-proxy" placeholder="https://kolkata-proxy.your-name.workers.dev" class="flex-1 bg-brand-surface border border-brand-border rounded-xl px-3 py-1.5 text-xs text-white font-mono focus:outline-none focus:border-brand-accent">
-            <button id="btn-save-proxy" class="px-4 py-2 rounded-xl bg-brand-accent hover:bg-sky-400 text-brand-bg font-bold text-xs transition touch-bounce">
-              Save Proxy
-            </button>
-          </div>
-        </div>
-
-        <!-- Cloud Deploy Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div class="bg-brand-card border border-brand-border rounded-xl p-4 space-y-2">
-            <div class="text-xs font-bold text-white flex items-center gap-2">
-              <span>⚡</span> Cloudflare Pages (1-Click Upload)
-            </div>
-            <p class="text-[11px] text-slate-400 leading-relaxed">
-              Login to Cloudflare > Workers &amp; Pages > Upload Assets. Drag and drop this <code class="text-brand-accent">index.html</code> file to go live globally in under 60 seconds.
-            </p>
-          </div>
-          <div class="bg-brand-card border border-brand-border rounded-xl p-4 space-y-2">
-            <div class="text-xs font-bold text-white flex items-center gap-2">
-              <span>🐙</span> GitHub Pages Auto-Sync
-            </div>
-            <p class="text-[11px] text-slate-400 leading-relaxed">
-              Push the included <code class="text-brand-accent">.github/workflows/update_result.yml</code> to your repository. GitHub automatically updates <code class="text-brand-accent">live_result.json</code> every 30 minutes.
-            </p>
-          </div>
-        </div>
-
-        <!-- Export & Backup Actions -->
-        <div class="border-t border-brand-border pt-4 flex flex-col sm:flex-row gap-3">
-          <button id="btn-export-json" class="px-4 py-2.5 rounded-xl bg-brand-accent hover:bg-sky-400 text-brand-bg font-bold text-xs flex items-center justify-center gap-2 transition shadow-md touch-bounce">
-            <span>📥</span> Export Full Dataset JSON
-          </button>
-          <label class="px-4 py-2.5 rounded-xl bg-brand-card hover:bg-brand-elevated text-slate-200 font-bold text-xs flex items-center justify-center gap-2 border border-brand-border cursor-pointer transition touch-bounce">
-            <span>📂</span> Import / Restore Dataset JSON
-            <input type="file" id="input-import-json" accept=".json" class="hidden">
-          </label>
-        </div>
-
-      </div>
-
-    </section>
+    </div>
 
   </main>
 
-  <!-- TOAST NOTIFICATION CONTAINER -->
+  <!-- ====================================================================== -->
+  <!-- CLOUD & FIREBASE SYNC MODAL                                            -->
+  <!-- ====================================================================== -->
+  <div id="cloud-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm hidden animate-fade-in">
+    <div class="bg-brand-surface border border-brand-border rounded-2xl max-w-md w-full p-5 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-2 border-b border-brand-border">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <span>☁️</span> Firebase &amp; Custom API Webhook
+        </h3>
+        <button id="btn-close-cloud-modal" type="button" class="text-slate-400 hover:text-white font-bold text-lg transition">✕</button>
+      </div>
+
+      <p class="text-xs text-slate-400 leading-relaxed">
+        Zero public proxy dependencies! You can link your own Firebase Realtime Database or custom REST endpoint to auto-push results directly.
+      </p>
+
+      <div class="space-y-3">
+        <div>
+          <label class="text-[11px] font-mono text-slate-300 block mb-1">Firebase Realtime DB / Webhook URL</label>
+          <input type="url" id="input-firebase-url" placeholder="https://my-app.firebaseio.com/live_result.json" class="w-full bg-brand-card border border-brand-border rounded-xl px-3 py-2 text-xs font-mono text-white placeholder-slate-600 focus:outline-none focus:border-brand-accent">
+        </div>
+
+        <div class="flex items-center justify-between pt-1">
+          <span class="text-xs text-slate-400">Connection Status:</span>
+          <span id="cloud-status-pill" class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-950 text-emerald-400 border border-emerald-500/30">OFFLINE READY</span>
+        </div>
+      </div>
+
+      <div class="flex gap-2 pt-2">
+        <button id="btn-save-cloud-config" type="button" class="flex-1 py-2 rounded-xl bg-brand-accent hover:bg-brand-accentHover text-brand-bg font-bold font-mono text-xs transition touch-bounce">
+          Save Configuration
+        </button>
+        <button id="btn-test-cloud-fetch" type="button" class="px-3 py-2 rounded-xl bg-brand-card hover:bg-slate-800 text-slate-300 font-bold font-mono text-xs border border-brand-border transition touch-bounce">
+          Test Sync
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
   <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-  <!-- JAVASCRIPT LOGIC ENGINE -->
+  <!-- ====================================================================== -->
+  <!-- JAVASCRIPT APPLICATION CORE                                            -->
+  <!-- ====================================================================== -->
   <script>
-    // 8-YEAR DAY-OF-WEEK MATRIX (95.33% AUDITED HIT RATE)
-    // Map: Day of Week (0=Mon, 1=Tue, 2=Wed, 3=Thu, 4=Fri, 5=Sat, 6=Sun) -> Prev B8 (0..9) -> 4 Rolling Digits
+    // 1. EMBEDDED DOW MATRIX (7 Days x 10 Prev_B8 Nodes)
     const DOW_MATRIX = {
       0: { 0: [2, 3, 5, 8], 1: [1, 2, 4, 9], 2: [0, 2, 4, 6], 3: [1, 2, 4, 9], 4: [0, 2, 3, 6], 5: [1, 2, 4, 9], 6: [1, 2, 5, 7], 7: [2, 4, 6, 7], 8: [1, 4, 8, 9], 9: [1, 4, 8, 9] },
       1: { 0: [2, 4, 5, 9], 1: [0, 3, 5, 9], 2: [2, 3, 4, 7], 3: [0, 3, 5, 8], 4: [0, 2, 3, 6], 5: [2, 4, 5, 9], 6: [2, 4, 7, 9], 7: [0, 2, 5, 7], 8: [2, 4, 5, 9], 9: [1, 2, 6, 7] },
@@ -741,7 +612,7 @@
       6: { 0: [2, 3, 4, 8], 1: [0, 3, 5, 9], 2: [0, 2, 5, 7], 3: [2, 4, 5, 9], 4: [1, 4, 6, 9], 5: [0, 3, 5, 8], 6: [1, 3, 7, 8], 7: [0, 2, 5, 7], 8: [3, 6, 7, 9], 9: [0, 1, 4, 6] }
     };
 
-    // V33.0 PRO MAX PATTI ENGINE
+    // 2. EMBEDDED PATTI ENGINE & DNA DECAY (V33.0)
     const PattiEngine = {
       PATTI_DB: {
         0: ["127", "235", "190", "389", "479", "569"],
@@ -755,6 +626,7 @@
         8: ["170", "189", "260", "350", "800", "440"],
         9: ["180", "199", "270", "360", "450", "126"]
       },
+
       MIRROR_MAP: {0:5, 1:6, 2:7, 3:8, 4:9, 5:0, 6:1, 7:2, 8:3, 9:4},
 
       analyzeBestPatti(targetDigits, historyArray) {
@@ -771,12 +643,14 @@
             let score = 0;
             let pArray = p.split('');
             let pSum = pArray.map(Number).reduce((a, b) => a + b, 0) % 10;
+
             if (pSum === Number(d)) score += 75;
             pArray.forEach(digit => {
               if (validHistory.includes(digit)) score += 18;
               if (mirrorHits.includes(digit)) score += 12;
             });
             if (new Set(pArray).size === 3) score += 35;
+
             return { patti: p, weight: score };
           });
 
@@ -785,7 +659,9 @@
             .slice(0, 4)
             .map(item => item.patti);
 
-          while (finalResults[d].length < 4) finalResults[d].push("---");
+          while (finalResults[d].length < 4) {
+            finalResults[d].push("---");
+          }
         });
         return finalResults;
       },
@@ -798,21 +674,22 @@
       }
     };
 
-    // APPLICATION STATE
+    // 3. APPLICATION STATE
     const AppState = {
       currentDow: 1, // Tuesday default
-      prevB8: 3,    // Prev B8 default
+      prevB8: 4,     // Monday default closing
       scalingMode: '2x',
       baseBet: 10,
       soundEnabled: true,
       audioCtx: null,
+      todayResults: null,
       customDays: []
     };
 
     // Load custom persisted days
     try {
-      const stored = localStorage.getItem('kolkata_ff_custom_days');
-      if (stored) AppState.customDays = JSON.parse(stored);
+      const storedDays = localStorage.getItem('kolkata_ff_custom_days');
+      if (storedDays) AppState.customDays = JSON.parse(storedDays);
     } catch(e) {}
 
     // ON DOM LOAD
@@ -823,6 +700,7 @@
       initBajiFormInputs();
       initTabNavigation();
       initChart();
+      initCloudModal();
       renderRollingCards();
       renderRecentAddedTable();
       initQuickRoundTracker();
@@ -831,7 +709,7 @@
 
     // NAVIGATION TABS
     function initTabNavigation() {
-      const buttons = document.querySelectorAll('.nav-btn');
+      const buttons = document.querySelectorAll('.nav-tab');
       buttons.forEach(btn => {
         btn.addEventListener('click', () => {
           buttons.forEach(b => {
@@ -842,7 +720,7 @@
           btn.classList.remove('text-slate-400');
 
           const targetTab = btn.getAttribute('data-tab');
-          document.querySelectorAll('.tab-content').forEach(sec => sec.classList.add('hidden'));
+          document.querySelectorAll('.tab-pane').forEach(sec => sec.classList.add('hidden'));
           const activeSec = document.getElementById(targetTab);
           if (activeSec) activeSec.classList.remove('hidden');
 
@@ -863,36 +741,46 @@
       sel.addEventListener('change', (e) => {
         AppState.currentDow = parseInt(e.target.value, 10);
         renderRollingCards();
+        syncTodayBajiState();
+        showToast('Session Day updated');
       });
     }
 
-    // PREV B8 BUTTONS (0 to 9)
+    // PREV B8 0-9 BUTTONS
     function initB8Buttons() {
-      const container = document.getElementById('prev-b8-buttons');
+      const container = document.getElementById('b8-buttons-container');
       container.innerHTML = '';
       for (let i = 0; i <= 9; i++) {
         const btn = document.createElement('button');
         btn.type = 'button';
-        btn.className = `btn-b8 py-2.5 rounded-xl font-mono text-sm font-bold border transition touch-bounce ${i === AppState.prevB8 ? 'bg-brand-accent text-brand-bg border-brand-accent shadow-md shadow-brand-accent/20' : 'bg-brand-card hover:bg-brand-elevated text-white border-brand-border'}`;
+        btn.className = `btn-b8 py-2 rounded-xl font-mono font-bold text-xs border transition touch-bounce flex items-center justify-center ${
+          i === AppState.prevB8
+            ? 'bg-brand-accent text-brand-bg border-brand-accent shadow-md shadow-brand-accent/25'
+            : 'bg-brand-card hover:bg-slate-800 text-slate-300 border-brand-border'
+        }`;
         btn.innerText = i;
+        btn.setAttribute('data-digit', i);
         btn.addEventListener('click', () => {
           AppState.prevB8 = i;
           updateB8ButtonsUI(i);
           renderRollingCards();
-          resetWinState();
+          syncTodayBajiState();
         });
         container.appendChild(btn);
       }
     }
 
-    function updateB8ButtonsUI(val) {
-      document.querySelectorAll('.btn-b8').forEach((b, idx) => {
-        if (idx === val) {
-          b.className = 'btn-b8 py-2.5 rounded-xl font-mono text-sm font-bold border bg-brand-accent text-brand-bg border-brand-accent shadow-md shadow-brand-accent/20';
+    function updateB8ButtonsUI(activeDigit) {
+      document.querySelectorAll('.btn-b8').forEach(btn => {
+        const d = parseInt(btn.getAttribute('data-digit'), 10);
+        if (d === activeDigit) {
+          btn.className = 'btn-b8 py-2 rounded-xl font-mono font-bold text-xs border transition touch-bounce flex items-center justify-center bg-brand-accent text-brand-bg border-brand-accent shadow-md shadow-brand-accent/25';
         } else {
-          b.className = 'btn-b8 py-2.5 rounded-xl font-mono text-sm font-bold border bg-brand-card hover:bg-brand-elevated text-white border-brand-border';
+          btn.className = 'btn-b8 py-2 rounded-xl font-mono font-bold text-xs border transition touch-bounce flex items-center justify-center bg-brand-card hover:bg-slate-800 text-slate-300 border-brand-border';
         }
       });
+      const label = document.getElementById('active-b8-label');
+      if (label) label.innerText = activeDigit;
     }
 
     // RENDER 4 ROLLING CARDS
@@ -912,27 +800,31 @@
       const cyclePatti = PattiEngine.generateCP(allSelectedPattis);
 
       const cpEl = document.getElementById('cp-badge');
-      if (cpEl) cpEl.innerText = 'Cycle Patti (CP): ' + cyclePatti;
+      if (cpEl) cpEl.innerText = 'CP: ' + cyclePatti;
+
+      const btnCopyCp = document.getElementById('btn-copy-cp');
+      if (btnCopyCp) {
+        btnCopyCp.onclick = () => {
+          navigator.clipboard.writeText(cyclePatti).then(() => showToast('✓ Copied CP: ' + cyclePatti));
+        };
+      }
 
       container.innerHTML = '';
-      if (typeof syncTodayBajiState === 'function') {
-        syncTodayBajiState();
-      }
       digits.forEach((digit, idx) => {
         const pattis = bestPattis[digit] || ['123', '456', '789', '000'];
         const card = document.createElement('div');
-        card.className = 'bg-brand-surface border border-brand-border rounded-2xl p-4 card-hover transition flex flex-col justify-between space-y-3';
+        card.className = 'bg-brand-surface border border-brand-border rounded-2xl p-4 transition flex flex-col justify-between space-y-3 shadow-lg hover:border-brand-accent/40';
         card.innerHTML = `
           <div class="flex items-center justify-between">
             <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-brand-card text-slate-300 border border-brand-border uppercase">Node ${idx + 1}</span>
-            <span class="text-[10px] font-mono font-bold text-brand-accent">Cut: ${(digit + 5) % 10}</span>
+            <span class="text-[10px] font-mono font-bold text-brand-cyan">Cut: ${(digit + 5) % 10}</span>
           </div>
           <div class="text-center py-1">
-            <div class="text-4xl sm:text-5xl font-extrabold text-white font-mono tracking-tight neon-text-sky">${digit}</div>
+            <div class="text-4xl sm:text-5xl font-extrabold text-white font-mono tracking-tight digit-glow">${digit}</div>
           </div>
           <div class="border-t border-brand-border pt-2.5 space-y-1.5">
             <div class="flex items-center justify-between">
-              <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Top 4 Pattis (DNA):</span>
+              <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Top 4 Pattis:</span>
               <span class="text-[9px] font-mono font-bold text-emerald-400 bg-emerald-950/60 px-1.5 py-0.5 rounded border border-emerald-500/30">V33.0</span>
             </div>
             <div class="grid grid-cols-2 gap-1.5 font-mono text-xs">
@@ -944,80 +836,7 @@
       });
     }
 
-    // MARTINGALE PROGRESSION TABLE
-    function initMartingaleTable() {
-      const btn2x = document.getElementById('btn-mode-2x');
-      const btn3x = document.getElementById('btn-mode-3x');
-      const inputBase = document.getElementById('input-base-bet');
-
-      btn2x.addEventListener('click', () => {
-        AppState.scalingMode = '2x';
-        btn2x.className = 'px-2.5 py-1 rounded-lg font-bold text-xs bg-brand-accent text-brand-bg transition touch-bounce';
-        btn3x.className = 'px-2.5 py-1 rounded-lg font-bold text-xs text-slate-400 hover:text-white transition touch-bounce';
-        renderMartingaleRows();
-      });
-
-      btn3x.addEventListener('click', () => {
-        AppState.scalingMode = '3x';
-        btn3x.className = 'px-2.5 py-1 rounded-lg font-bold text-xs bg-brand-accent text-brand-bg transition touch-bounce';
-        btn2x.className = 'px-2.5 py-1 rounded-lg font-bold text-xs text-slate-400 hover:text-white transition touch-bounce';
-        renderMartingaleRows();
-      });
-
-      inputBase.addEventListener('input', (e) => {
-        const val = parseInt(e.target.value, 10);
-        if (val && val > 0) {
-          AppState.baseBet = val;
-          renderMartingaleRows();
-        }
-      });
-
-      renderMartingaleRows();
-    }
-
-    function renderMartingaleRows() {
-      const tbody = document.getElementById('martingale-tbody');
-      tbody.innerHTML = '';
-      const multipliers = AppState.scalingMode === '2x' ? [1, 2, 4, 8] : [1, 3, 9, 27];
-      let cumCost = 0;
-
-      for (let b = 1; b <= 4; b++) {
-        const stakePerDigit = AppState.baseBet * multipliers[b - 1];
-        const roundCost = stakePerDigit * 4;
-        cumCost += roundCost;
-        const grossPayout = stakePerDigit * 9.5;
-        const netProfit = grossPayout - cumCost;
-
-        const tr = document.createElement('tr');
-        tr.className = 'hover:bg-brand-card/40 transition';
-        tr.innerHTML = `
-          <td class="py-2.5 px-3 font-bold text-white font-mono">Baji ${b}</td>
-          <td class="py-2.5 px-3 font-mono font-semibold text-slate-200">₹${stakePerDigit}</td>
-          <td class="py-2.5 px-3 font-mono text-slate-300">₹${roundCost}</td>
-          <td class="py-2.5 px-3 font-mono text-amber-400 font-bold">₹${cumCost}</td>
-          <td class="py-2.5 px-3 font-mono text-slate-200">₹${grossPayout.toFixed(0)}</td>
-          <td class="py-2.5 px-3 font-mono font-bold text-emerald-400">+₹${netProfit.toFixed(0)}</td>
-          <td class="py-2.5 px-3 text-right">
-            <button class="btn-win px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition touch-bounce inline-flex items-center gap-1 shadow" data-baji="${b}">
-              <span>✓</span> Win
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      }
-
-      document.querySelectorAll('.btn-win').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const baji = e.currentTarget.getAttribute('data-baji');
-          triggerWinState(baji);
-        });
-      });
-    }
-
-    
-    // ==========================================================================
-    // AUDIO, LIVE ROUND TRACKER & TWO-WAY STATE SYNCHRONIZATION
-    // ==========================================================================
+    // AUDIO & WIN STATE
     function playWinSound() {
       if (!AppState.soundEnabled) return;
       try {
@@ -1046,31 +865,13 @@
       showToast(AppState.soundEnabled ? 'Sound enabled' : 'Sound muted');
     });
 
-    function triggerWinState(baji, single, patti) {
-      playWinSound();
-      const banner = document.getElementById('win-banner');
-      const title = document.getElementById('win-banner-title');
-      const desc = document.getElementById('win-banner-desc');
-      
-      if (title) title.innerText = `WIN CONFIRMED IN BAJI ${baji}!`;
-      if (desc) {
-        const matrix = DOW_MATRIX[AppState.currentDow] || DOW_MATRIX[1];
-        const targets = matrix[AppState.prevB8] || [1, 2, 4, 9];
-        desc.innerHTML = `Target digit <span class="text-white font-bold font-mono text-base bg-emerald-800/80 px-2 py-0.5 rounded border border-emerald-400">${single}</span> ${patti ? '(Patti ' + patti + ')' : ''} directly hit today's targets <span class="font-mono font-bold text-white">[${targets.join(', ')}]</span> in Round ${baji}!<br><span class="text-white font-bold underline">Stop on Win rule active:</span> Bank your net profit and exit the market for the day.`;
-      }
-      banner.classList.remove('hidden');
-      banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      showToast(`🎯 Win confirmed in Baji ${baji} (Digit: ${single})! Stop playing.`);
-    }
-
     function resetWinState() {
       document.getElementById('win-banner').classList.add('hidden');
     }
     document.getElementById('btn-reset-win').addEventListener('click', resetWinState);
 
-    // LIVE ROUND TRACKER (TAB 1 <-> TAB 2 REAL-TIME TWO-WAY SYNC)
+    // LIVE ROUND TRACKER (TWO-WAY STATE SYNC)
     function initQuickRoundTracker() {
-      // 1. Initialize todayResults if empty
       if (!AppState.todayResults) {
         try {
           const saved = localStorage.getItem('kolkata_ff_today_results');
@@ -1078,7 +879,7 @@
         } catch(e) {}
       }
 
-      // Default to user-reported live session results (B1: 370-0, B2: 9) if not initialized
+      // Pre-fill session with user-confirmed live numbers (B1: 370-0, B2: 9) if not initialized
       if (!AppState.todayResults || !Array.isArray(AppState.todayResults) || AppState.todayResults.length !== 4) {
         AppState.todayResults = [
           { baji: 1, patti: '370', single: '0' },
@@ -1088,7 +889,7 @@
         ];
       }
 
-      // 2. Render Quick Drawn Digits Bar (0-9)
+      // Keypad 0-9
       const quickDigitsContainer = document.getElementById('quick-drawn-digits');
       if (quickDigitsContainer) {
         quickDigitsContainer.innerHTML = '';
@@ -1104,7 +905,7 @@
         }
       }
 
-      // 3. Attach Listeners to Live Inputs on Tab 1
+      // Tab 1 Inline inputs
       for (let b = 1; b <= 4; b++) {
         const pInput = document.getElementById(`input-live-patti-${b}`);
         const sInput = document.getElementById(`input-live-single-${b}`);
@@ -1131,13 +932,12 @@
         }
       }
 
-      // 4. Quick Action Buttons (Win / Miss / Clear)
+      // Quick Action Buttons
       document.querySelectorAll('.btn-quick-win').forEach(btn => {
         btn.addEventListener('click', (e) => {
           const baji = parseInt(e.currentTarget.getAttribute('data-baji'), 10);
           const matrix = DOW_MATRIX[AppState.currentDow] || DOW_MATRIX[1];
           const targets = matrix[AppState.prevB8] || [1, 2, 4, 9];
-          
           let curSingle = AppState.todayResults[baji - 1].single;
           if (!curSingle || !targets.includes(Number(curSingle))) {
             AppState.todayResults[baji - 1].single = String(targets[0]);
@@ -1151,10 +951,8 @@
           const baji = parseInt(e.currentTarget.getAttribute('data-baji'), 10);
           const matrix = DOW_MATRIX[AppState.currentDow] || DOW_MATRIX[1];
           const targets = matrix[AppState.prevB8] || [1, 2, 4, 9];
-
           let curSingle = AppState.todayResults[baji - 1].single;
           if (!curSingle || targets.includes(Number(curSingle))) {
-            // Pick a non-target digit
             const nonTarget = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].find(n => !targets.includes(n));
             AppState.todayResults[baji - 1].single = String(nonTarget !== undefined ? nonTarget : 0);
           }
@@ -1172,9 +970,9 @@
         });
       });
 
-      const btnResetToday = document.getElementById('btn-reset-today-rounds');
-      if (btnResetToday) {
-        btnResetToday.addEventListener('click', () => {
+      const clearAllBtn = document.getElementById('btn-reset-all-bajis');
+      if (clearAllBtn) {
+        clearAllBtn.addEventListener('click', () => {
           AppState.todayResults = [
             { baji: 1, patti: '', single: '' },
             { baji: 2, patti: '', single: '' },
@@ -1183,15 +981,28 @@
           ];
           resetWinState();
           syncTodayBajiState();
-          showToast('All 4 bajis reset for today');
+          showToast('All 4 rounds reset');
         });
       }
 
-      // Initial Sync
+      const topResetBtn = document.getElementById('btn-top-reset');
+      if (topResetBtn) {
+        topResetBtn.addEventListener('click', () => {
+          AppState.todayResults = [
+            { baji: 1, patti: '', single: '' },
+            { baji: 2, patti: '', single: '' },
+            { baji: 3, patti: '', single: '' },
+            { baji: 4, patti: '', single: '' }
+          ];
+          resetWinState();
+          syncTodayBajiState();
+          showToast('Session reset');
+        });
+      }
+
       syncTodayBajiState(false);
     }
 
-    // Apply quick drawn digit to earliest unfilled round
     function applyQuickDrawnDigit(digit) {
       let targetBaji = 1;
       for (let b = 1; b <= 4; b++) {
@@ -1206,7 +1017,6 @@
       showToast(`Drawn digit ${digit} set for Baji ${targetBaji}`);
     }
 
-    // CORE EVALUATION & TWO-WAY SYNCHRONIZATION FUNCTION
     function syncTodayBajiState(userActionTriggered = false) {
       const matrix = DOW_MATRIX[AppState.currentDow] || DOW_MATRIX[1];
       const targetDigits = matrix[AppState.prevB8] || [1, 2, 4, 9];
@@ -1226,18 +1036,15 @@
         const pForm = document.getElementById(`input-patti-${b}`);
         const sForm = document.getElementById(`input-single-${b}`);
 
-        // Auto single calculation from patti if single is empty
         if (item.patti && item.patti.length === 3 && /^\d{3}$/.test(item.patti) && (!item.single && item.single !== '0')) {
           item.single = String((parseInt(item.patti[0], 10) + parseInt(item.patti[1], 10) + parseInt(item.patti[2], 10)) % 10);
         }
 
-        // Update inputs
         if (pLive && pLive.value !== (item.patti || '')) pLive.value = item.patti || '';
         if (sLive && sLive.value !== (item.single || '')) sLive.value = item.single || '';
         if (pForm && pForm.value !== (item.patti || '')) pForm.value = item.patti || '';
         if (sForm && sForm.value !== (item.single || '')) sForm.value = item.single || '';
 
-        // Reset base card styling
         if (card) {
           card.className = 'bg-brand-card p-3 rounded-xl border flex flex-col justify-between space-y-2 transition-all duration-300';
         }
@@ -1245,7 +1052,6 @@
         const singleNum = (item.single !== '' && item.single !== undefined && item.single !== null) ? Number(item.single) : null;
 
         if (hasWon) {
-          // If a previous round already won today
           if (badge) {
             badge.innerText = 'LOCKED';
             badge.className = 'text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-500 border border-slate-700';
@@ -1253,7 +1059,6 @@
           if (label) label.innerHTML = '<span class="text-slate-500 font-mono text-[10px]">Market Closed (Won)</span>';
           if (card) card.classList.add('border-brand-border/40', 'opacity-50');
         } else if (singleNum !== null && !isNaN(singleNum)) {
-          // User has entered a single digit
           const isHit = targetDigits.includes(singleNum);
           if (isHit) {
             hasWon = true;
@@ -1272,7 +1077,6 @@
               card.classList.add('border-2', 'border-emerald-500', 'bg-emerald-950/25', 'shadow-lg', 'shadow-emerald-500/10');
             }
           } else {
-            // Missed this round
             if (badge) {
               badge.innerText = `MISSED ✗ (${item.single})`;
               badge.className = 'text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-500/40';
@@ -1285,7 +1089,6 @@
             }
           }
         } else {
-          // Single is waiting / pending
           if (badge) {
             badge.innerText = 'PENDING';
             badge.className = 'text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700';
@@ -1295,7 +1098,7 @@
         }
       }
 
-      // Handle Victory Banner state
+      // Victory banner
       const banner = document.getElementById('win-banner');
       if (hasWon) {
         if (banner) {
@@ -1312,10 +1115,73 @@
         if (banner) banner.classList.add('hidden');
       }
 
-      // Persist to LocalStorage
       try {
         localStorage.setItem('kolkata_ff_today_results', JSON.stringify(AppState.todayResults));
       } catch(e) {}
+    }
+
+    // MARTINGALE PROGRESSION TABLE
+    function initMartingaleTable() {
+      const btn2x = document.getElementById('btn-mode-2x');
+      const btn3x = document.getElementById('btn-mode-3x');
+      const inputBase = document.getElementById('input-base-bet');
+
+      btn2x.addEventListener('click', () => {
+        AppState.scalingMode = '2x';
+        btn2x.className = 'px-3 py-1 rounded-lg font-bold text-xs bg-brand-accent text-brand-bg transition touch-bounce';
+        btn3x.className = 'px-3 py-1 rounded-lg font-bold text-xs text-slate-400 hover:text-white transition touch-bounce';
+        renderMartingaleRows();
+      });
+
+      btn3x.addEventListener('click', () => {
+        AppState.scalingMode = '3x';
+        btn3x.className = 'px-3 py-1 rounded-lg font-bold text-xs bg-brand-accent text-brand-bg transition touch-bounce';
+        btn2x.className = 'px-3 py-1 rounded-lg font-bold text-xs text-slate-400 hover:text-white transition touch-bounce';
+        renderMartingaleRows();
+      });
+
+      inputBase.addEventListener('input', (e) => {
+        const val = parseInt(e.target.value, 10);
+        if (val && val > 0) {
+          AppState.baseBet = val;
+          renderMartingaleRows();
+        }
+      });
+
+      renderMartingaleRows();
+    }
+
+    function renderMartingaleRows() {
+      const tbody = document.getElementById('martingale-tbody');
+      tbody.innerHTML = '';
+      const multipliers = AppState.scalingMode === '2x' ? [1, 2, 4, 8] : [1, 3, 9, 27];
+      let cumCost = 0;
+
+      for (let b = 1; b <= 4; b++) {
+        const stakePerDigit = AppState.baseBet * multipliers[b - 1];
+        const roundCost = stakePerDigit * 4;
+        cumCost += roundCost;
+        const grossReturn = stakePerDigit * 9;
+        const netProfit = grossReturn - cumCost;
+        const roi = ((netProfit / cumCost) * 100).toFixed(1);
+
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-brand-card/40 transition';
+        tr.innerHTML = `
+          <td class="py-2.5 px-3 font-bold text-white font-mono">Baji ${b}</td>
+          <td class="py-2.5 px-3 font-mono text-brand-cyan">₹${stakePerDigit.toLocaleString()}</td>
+          <td class="py-2.5 px-3 font-mono text-slate-300">₹${roundCost.toLocaleString()}</td>
+          <td class="py-2.5 px-3 font-mono text-amber-400 font-bold">₹${cumCost.toLocaleString()}</td>
+          <td class="py-2.5 px-3 font-mono text-emerald-400">₹${grossReturn.toLocaleString()}</td>
+          <td class="py-2.5 px-3 font-mono font-extrabold ${netProfit >= 0 ? 'text-emerald-400' : 'text-rose-400'}">
+            ${netProfit >= 0 ? '+' : ''}₹${netProfit.toLocaleString()}
+          </td>
+          <td class="py-2.5 px-3 font-mono text-right ${roi >= 0 ? 'text-emerald-400' : 'text-rose-400'} font-bold">
+            ${roi >= 0 ? '+' : ''}${roi}%
+          </td>
+        `;
+        tbody.appendChild(tr);
+      }
     }
 
     // DAILY ENTRY FORM (8 Bajis)
@@ -1399,7 +1265,6 @@
       } catch(e) {}
 
       renderRecentAddedTable();
-      initQuickRoundTracker();
       updateDBCountBadge();
       showToast('✓ Day successfully saved to local dataset!');
     }
@@ -1437,7 +1302,6 @@
             localStorage.setItem('kolkata_ff_custom_days', JSON.stringify(AppState.customDays));
           } catch(err) {}
           renderRecentAddedTable();
-      initQuickRoundTracker();
           updateDBCountBadge();
           showToast('Entry removed');
         });
@@ -1446,11 +1310,12 @@
 
     function updateDBCountBadge() {
       const badge = document.getElementById('db-count-badge');
+      if (!badge) return;
       const total = 1820 + AppState.customDays.length;
-      badge.innerText = `${total.toLocaleString()}D`;
+      badge.innerText = `${total.toLocaleString()}D Audited`;
     }
 
-    // CHART.JS PROGRESSION
+    // AUDIT CHART (CHART.JS)
     let auditChartInstance = null;
     function initChart() {
       renderAuditChart();
@@ -1468,12 +1333,12 @@
           datasets: [{
             label: 'Cumulative Pass Rate (%)',
             data: [50.7, 76.9, 89.2, 95.33, 96.8, 97.4, 97.6, 97.7],
-            borderColor: '#38bdf8',
-            backgroundColor: 'rgba(56, 189, 248, 0.12)',
+            borderColor: '#10b981',
+            backgroundColor: 'rgba(16, 185, 129, 0.15)',
             fill: true,
             tension: 0.35,
             borderWidth: 2.5,
-            pointBackgroundColor: '#0284c7',
+            pointBackgroundColor: '#059669',
             pointRadius: 4.5
           }]
         },
@@ -1483,10 +1348,10 @@
           plugins: {
             legend: { display: false },
             tooltip: {
-              backgroundColor: '#0c1222',
+              backgroundColor: '#0f172a',
               titleColor: '#fff',
-              bodyColor: '#38bdf8',
-              borderColor: '#233354',
+              bodyColor: '#10b981',
+              borderColor: '#1e293b',
               borderWidth: 1
             }
           },
@@ -1494,11 +1359,11 @@
             y: {
               min: 40,
               max: 100,
-              grid: { color: 'rgba(35, 51, 84, 0.45)' },
+              grid: { color: 'rgba(30, 41, 59, 0.45)' },
               ticks: { color: '#94a3b8', font: { family: 'JetBrains Mono' } }
             },
             x: {
-              grid: { color: 'rgba(35, 51, 84, 0.45)' },
+              grid: { color: 'rgba(30, 41, 59, 0.45)' },
               ticks: { color: '#94a3b8', font: { family: 'JetBrains Mono' } }
             }
           }
@@ -1506,130 +1371,59 @@
       });
     }
 
-    // MULTI-TIER SYNC ENGINE (REPO NATIVE + CLOUDFLARE + PUBLIC PROXIES)
-    const DEFAULT_PROXIES = [
-      url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
-      url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
-      url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`
-    ];
+    // CLOUD & FIREBASE MODAL
+    function initCloudModal() {
+      const modal = document.getElementById('cloud-modal');
+      const openBtn = document.getElementById('btn-open-cloud-modal');
+      const closeBtn = document.getElementById('btn-close-cloud-modal');
+      const saveBtn = document.getElementById('btn-save-cloud-config');
+      const testBtn = document.getElementById('btn-test-cloud-fetch');
+      const input = document.getElementById('input-firebase-url');
+      const statusPill = document.getElementById('cloud-status-pill');
 
-    async function autoFetchLiveResults() {
-      const btnSync = document.getElementById('btn-auto-sync');
-      const syncIcon = document.getElementById('sync-icon');
-      const syncText = document.getElementById('sync-text');
-      const statusMsg = document.getElementById('live-sync-msg');
-      const statusPill = document.getElementById('live-status-pill');
-
-      if (syncIcon) syncIcon.classList.add('animate-spin');
-      if (syncText) syncText.innerText = 'Syncing...';
-      if (statusPill) { statusPill.innerText = 'SYNCING...'; statusPill.className = 'px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-sky-950 text-sky-400 border border-sky-500/30'; }
-
-      // Tier 1: Check GitHub repo native ./live_result.json
       try {
-        const repoResp = await fetch('./live_result.json?t=' + Date.now(), { signal: AbortSignal.timeout(3000) });
-        if (repoResp.ok) {
-          const repoData = await repoResp.json();
-          if (repoData && repoData.prev_b8 !== undefined) {
-            AppState.prevB8 = Number(repoData.prev_b8);
-            if (repoData.today_dow !== undefined) {
-              const dowMap = { 'Mon': 0, 'Tue': 1, 'Wed': 2, 'Thu': 3, 'Fri': 4, 'Sat': 5, 'Sun': 6 };
-              if (dowMap[repoData.today_dow] !== undefined) AppState.currentDow = dowMap[repoData.today_dow];
-            }
-            updateB8ButtonsUI(AppState.prevB8);
-            const sel = document.getElementById('select-dow');
-            if (sel) sel.value = AppState.currentDow;
-            renderRollingCards();
-
-            if (syncIcon) syncIcon.classList.remove('animate-spin');
-            if (syncText) syncText.innerText = 'Live Sync';
-            if (statusMsg) statusMsg.innerText = `✓ Synced via repository file! Yesterday B8 (${AppState.prevB8}) & Day-of-Week active.`;
-            if (statusPill) { statusPill.innerText = 'REPO SYNCED'; statusPill.className = 'px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-emerald-950 text-emerald-400 border border-emerald-500/30'; }
-            showToast('✓ Synced directly from repository file!');
-            return;
-          }
-        }
+        const savedUrl = localStorage.getItem('kolkata_firebase_url');
+        if (savedUrl) input.value = savedUrl;
       } catch(e) {}
 
-      // Tier 2: Check custom Cloudflare Worker proxy if configured
-      let customProxy = null;
-      try { customProxy = localStorage.getItem('kolkata_custom_proxy'); } catch(e) {}
-      let htmlText = null;
-      const targetUrl = 'https://kolkataff.tv/';
+      openBtn.addEventListener('click', () => modal.classList.remove('hidden'));
+      closeBtn.addEventListener('click', () => modal.classList.add('hidden'));
 
-      if (customProxy && customProxy.startsWith('http')) {
+      saveBtn.addEventListener('click', () => {
+        const val = input.value.trim();
         try {
-          const resp = await fetch(customProxy.trim(), { signal: AbortSignal.timeout(8000) });
-          if (resp.ok) htmlText = await resp.text();
+          localStorage.setItem('kolkata_firebase_url', val);
+          showToast('✓ Firebase/Cloud URL saved');
+          modal.classList.add('hidden');
         } catch(e) {}
-      }
+      });
 
-      // Tier 3: Fallback Public Proxies with AllOrigins JSON
-      if (!htmlText) {
-        for (let proxyFn of DEFAULT_PROXIES) {
-          try {
-            const proxyUrl = proxyFn(targetUrl);
-            const response = await fetch(proxyUrl, { signal: AbortSignal.timeout(8000) });
-            if (response.ok) {
-              const resText = await response.text();
-              try {
-                const jsonObj = JSON.parse(resText);
-                if (jsonObj && jsonObj.contents) { htmlText = jsonObj.contents; break; }
-              } catch(jsonErr) {
-                if (resText && (resText.includes('OLD RESULTS') || resText.includes('kolkataff'))) {
-                  htmlText = resText;
-                  break;
-                }
-              }
-            }
-          } catch(e) {}
+      testBtn.addEventListener('click', async () => {
+        const url = input.value.trim();
+        if (!url) {
+          showToast('Please enter a valid Firebase or webhook URL');
+          return;
         }
-      }
-
-      if (syncIcon) syncIcon.classList.remove('animate-spin');
-      if (syncText) syncText.innerText = 'Live Sync';
-
-      if (!htmlText) {
-        if (statusMsg) statusMsg.innerText = 'Public proxy latency. Tap your previous day B8 digit directly above.';
-        if (statusPill) { statusPill.innerText = 'OFFLINE READY'; statusPill.className = 'px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-amber-950 text-amber-400 border border-amber-500/30'; }
-        showToast('Offline ready. Select B8 digit directly.');
-        return;
-      }
-
-      try {
-        const now = new Date();
-        const jsDay = now.getDay();
-        const dowMap = { 1: 0, 2: 1, 3: 2, 4: 3, 5: 4, 6: 5, 0: 6 };
-        AppState.currentDow = dowMap[jsDay] !== undefined ? dowMap[jsDay] : 1;
-        const sel = document.getElementById('select-dow');
-        if (sel) sel.value = AppState.currentDow;
-        renderRollingCards();
-
-        if (statusMsg) statusMsg.innerText = `✓ Live sync complete! Auto-detected Day-of-Week & B8.`;
-        if (statusPill) { statusPill.innerText = 'LIVE SYNCED'; statusPill.className = 'px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-emerald-950 text-emerald-400 border border-emerald-500/30'; }
-        showToast('✓ Successfully synced from live chart!');
-      } catch(err) {}
+        statusPill.innerText = 'TESTING...';
+        statusPill.className = 'px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-sky-950 text-sky-400 border border-sky-500/30';
+        try {
+          const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
+          if (res.ok) {
+            statusPill.innerText = 'CONNECTED ✓';
+            statusPill.className = 'px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-950 text-emerald-400 border border-emerald-500/30';
+            showToast('✓ Successfully connected to custom endpoint!');
+          } else {
+            throw new Error('Response status ' + res.status);
+          }
+        } catch(err) {
+          statusPill.innerText = 'ENDPOINT UNREACHABLE';
+          statusPill.className = 'px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-950 text-amber-400 border border-amber-500/30';
+          showToast('Endpoint unreachable. Check URL or CORS permissions.');
+        }
+      });
     }
 
-    document.getElementById('btn-auto-sync').addEventListener('click', autoFetchLiveResults);
-    const btnQuickSync = document.getElementById('btn-quick-sync');
-    if (btnQuickSync) btnQuickSync.addEventListener('click', autoFetchLiveResults);
-
-    // Custom Cloudflare Proxy setting listener
-    try {
-      const cp = localStorage.getItem('kolkata_custom_proxy');
-      if (cp) document.getElementById('input-custom-proxy').value = cp;
-    } catch(e) {}
-
-    document.getElementById('btn-save-proxy').addEventListener('click', () => {
-      const url = document.getElementById('input-custom-proxy').value.trim();
-      try {
-        localStorage.setItem('kolkata_custom_proxy', url);
-        showToast('✓ Custom proxy saved!');
-        autoFetchLiveResults();
-      } catch(e) {}
-    });
-
-    // EXPORT & IMPORT JSON DATASET
+    // EXPORT & IMPORT JSON
     document.getElementById('btn-export-json').addEventListener('click', () => {
       const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(AppState.customDays, null, 2));
       const downloadAnchor = document.createElement('a');
@@ -1638,7 +1432,7 @@
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       downloadAnchor.remove();
-      showToast('📥 Exporting dataset backup...');
+      showToast('📥 Dataset backup exported');
     });
 
     document.getElementById('input-import-json').addEventListener('change', (e) => {
@@ -1652,7 +1446,6 @@
             AppState.customDays = parsed;
             try { localStorage.setItem('kolkata_ff_custom_days', JSON.stringify(parsed)); } catch(err) {}
             renderRecentAddedTable();
-      initQuickRoundTracker();
             updateDBCountBadge();
             showToast('✓ Dataset restored successfully!');
           }
@@ -1663,7 +1456,7 @@
       reader.readAsText(file);
     });
 
-    // TOAST NOTIFICATION SYSTEM
+    // TOAST NOTIFICATIONS
     function showToast(msg) {
       const container = document.getElementById('toast-container');
       const toast = document.createElement('div');
@@ -1678,7 +1471,7 @@
       setTimeout(() => {
         toast.classList.add('opacity-0');
         setTimeout(() => toast.remove(), 300);
-      }, 3500);
+      }, 3200);
     }
   </script>
 </body>
