@@ -219,82 +219,143 @@
           <span class="text-[11px] text-slate-400">Tap the winning round below or select today's drawn digit:</span>
         </div>
 
-        <!-- 4 Round Action Cards (Mobile-friendly, big buttons) -->
+        <!-- 4 Round Action Cards (Mobile-friendly, inline inputs + 1-tap verify) -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
           <!-- Baji 1 Card -->
-          <div id="round-card-1" class="bg-brand-card p-3 rounded-xl border border-brand-border flex flex-col justify-between space-y-2">
+          <div id="round-card-1" class="bg-brand-card p-3 rounded-xl border border-brand-border flex flex-col justify-between space-y-2 transition-all duration-300">
             <div class="flex items-center justify-between">
               <span class="text-[11px] font-bold text-white font-mono">Baji 1 (10:30)</span>
               <span id="badge-status-1" class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">PENDING</span>
             </div>
-            <div class="text-xs text-slate-300 font-mono" id="label-result-1">Result: Waiting...</div>
-            <div class="flex gap-1.5 pt-1">
-              <button type="button" class="btn-quick-win flex-1 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition touch-bounce shadow" data-baji="1">
+            <!-- Inline Live Inputs -->
+            <div class="grid grid-cols-2 gap-1.5 pt-0.5">
+              <div>
+                <span class="text-[8px] font-mono text-slate-400 block mb-0.5">PATTI</span>
+                <input type="text" maxlength="3" id="input-live-patti-1" data-baji="1" placeholder="370" class="input-live-patti w-full bg-brand-surface border border-brand-border rounded-lg px-1.5 py-1 text-center font-mono text-xs text-white placeholder-slate-600 focus:outline-none focus:border-brand-accent">
+              </div>
+              <div>
+                <span class="text-[8px] font-mono text-slate-400 block mb-0.5">SINGLE</span>
+                <input type="text" maxlength="1" id="input-live-single-1" data-baji="1" placeholder="0" class="input-live-single w-full bg-brand-surface border border-brand-border rounded-lg px-1.5 py-1 text-center font-mono text-xs font-bold text-brand-accent placeholder-slate-600 focus:outline-none focus:border-brand-accent">
+              </div>
+            </div>
+            <div class="text-[11px] text-slate-300 font-mono text-center py-0.5 truncate" id="label-result-1">Result: Waiting...</div>
+            <div class="flex gap-1 pt-0.5">
+              <button type="button" class="btn-quick-win flex-1 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] transition touch-bounce shadow" data-baji="1">
                 ✓ Win
               </button>
-              <button type="button" class="btn-quick-miss flex-1 py-1.5 rounded-lg bg-brand-surface hover:bg-slate-700 text-slate-400 hover:text-white text-xs font-semibold border border-brand-border transition touch-bounce" data-baji="1">
+              <button type="button" class="btn-quick-miss flex-1 py-1 rounded-lg bg-brand-surface hover:bg-slate-700 text-slate-300 hover:text-white text-[11px] font-semibold border border-brand-border transition touch-bounce" data-baji="1">
                 ✗ Miss
+              </button>
+              <button type="button" class="btn-quick-clear px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-rose-400 text-[11px] font-semibold border border-brand-border transition touch-bounce" data-baji="1" title="Clear Baji 1">
+                ⟲
               </button>
             </div>
           </div>
 
           <!-- Baji 2 Card -->
-          <div id="round-card-2" class="bg-brand-card p-3 rounded-xl border border-brand-border flex flex-col justify-between space-y-2">
+          <div id="round-card-2" class="bg-brand-card p-3 rounded-xl border border-brand-border flex flex-col justify-between space-y-2 transition-all duration-300">
             <div class="flex items-center justify-between">
               <span class="text-[11px] font-bold text-white font-mono">Baji 2 (12:00)</span>
               <span id="badge-status-2" class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">PENDING</span>
             </div>
-            <div class="text-xs text-slate-300 font-mono" id="label-result-2">Result: Waiting...</div>
-            <div class="flex gap-1.5 pt-1">
-              <button type="button" class="btn-quick-win flex-1 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition touch-bounce shadow" data-baji="2">
+            <!-- Inline Live Inputs -->
+            <div class="grid grid-cols-2 gap-1.5 pt-0.5">
+              <div>
+                <span class="text-[8px] font-mono text-slate-400 block mb-0.5">PATTI</span>
+                <input type="text" maxlength="3" id="input-live-patti-2" data-baji="2" placeholder="Patti" class="input-live-patti w-full bg-brand-surface border border-brand-border rounded-lg px-1.5 py-1 text-center font-mono text-xs text-white placeholder-slate-600 focus:outline-none focus:border-brand-accent">
+              </div>
+              <div>
+                <span class="text-[8px] font-mono text-slate-400 block mb-0.5">SINGLE</span>
+                <input type="text" maxlength="1" id="input-live-single-2" data-baji="2" placeholder="Single" class="input-live-single w-full bg-brand-surface border border-brand-border rounded-lg px-1.5 py-1 text-center font-mono text-xs font-bold text-brand-accent placeholder-slate-600 focus:outline-none focus:border-brand-accent">
+              </div>
+            </div>
+            <div class="text-[11px] text-slate-300 font-mono text-center py-0.5 truncate" id="label-result-2">Result: Waiting...</div>
+            <div class="flex gap-1 pt-0.5">
+              <button type="button" class="btn-quick-win flex-1 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] transition touch-bounce shadow" data-baji="2">
                 ✓ Win
               </button>
-              <button type="button" class="btn-quick-miss flex-1 py-1.5 rounded-lg bg-brand-surface hover:bg-slate-700 text-slate-400 hover:text-white text-xs font-semibold border border-brand-border transition touch-bounce" data-baji="2">
+              <button type="button" class="btn-quick-miss flex-1 py-1 rounded-lg bg-brand-surface hover:bg-slate-700 text-slate-300 hover:text-white text-[11px] font-semibold border border-brand-border transition touch-bounce" data-baji="2">
                 ✗ Miss
+              </button>
+              <button type="button" class="btn-quick-clear px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-rose-400 text-[11px] font-semibold border border-brand-border transition touch-bounce" data-baji="2" title="Clear Baji 2">
+                ⟲
               </button>
             </div>
           </div>
 
           <!-- Baji 3 Card -->
-          <div id="round-card-3" class="bg-brand-card p-3 rounded-xl border border-brand-border flex flex-col justify-between space-y-2">
+          <div id="round-card-3" class="bg-brand-card p-3 rounded-xl border border-brand-border flex flex-col justify-between space-y-2 transition-all duration-300">
             <div class="flex items-center justify-between">
               <span class="text-[11px] font-bold text-white font-mono">Baji 3 (01:30)</span>
               <span id="badge-status-3" class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">PENDING</span>
             </div>
-            <div class="text-xs text-slate-300 font-mono" id="label-result-3">Result: Waiting...</div>
-            <div class="flex gap-1.5 pt-1">
-              <button type="button" class="btn-quick-win flex-1 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition touch-bounce shadow" data-baji="3">
+            <!-- Inline Live Inputs -->
+            <div class="grid grid-cols-2 gap-1.5 pt-0.5">
+              <div>
+                <span class="text-[8px] font-mono text-slate-400 block mb-0.5">PATTI</span>
+                <input type="text" maxlength="3" id="input-live-patti-3" data-baji="3" placeholder="Patti" class="input-live-patti w-full bg-brand-surface border border-brand-border rounded-lg px-1.5 py-1 text-center font-mono text-xs text-white placeholder-slate-600 focus:outline-none focus:border-brand-accent">
+              </div>
+              <div>
+                <span class="text-[8px] font-mono text-slate-400 block mb-0.5">SINGLE</span>
+                <input type="text" maxlength="1" id="input-live-single-3" data-baji="3" placeholder="Single" class="input-live-single w-full bg-brand-surface border border-brand-border rounded-lg px-1.5 py-1 text-center font-mono text-xs font-bold text-brand-accent placeholder-slate-600 focus:outline-none focus:border-brand-accent">
+              </div>
+            </div>
+            <div class="text-[11px] text-slate-300 font-mono text-center py-0.5 truncate" id="label-result-3">Result: Waiting...</div>
+            <div class="flex gap-1 pt-0.5">
+              <button type="button" class="btn-quick-win flex-1 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] transition touch-bounce shadow" data-baji="3">
                 ✓ Win
               </button>
-              <button type="button" class="btn-quick-miss flex-1 py-1.5 rounded-lg bg-brand-surface hover:bg-slate-700 text-slate-400 hover:text-white text-xs font-semibold border border-brand-border transition touch-bounce" data-baji="3">
+              <button type="button" class="btn-quick-miss flex-1 py-1 rounded-lg bg-brand-surface hover:bg-slate-700 text-slate-300 hover:text-white text-[11px] font-semibold border border-brand-border transition touch-bounce" data-baji="3">
                 ✗ Miss
+              </button>
+              <button type="button" class="btn-quick-clear px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-rose-400 text-[11px] font-semibold border border-brand-border transition touch-bounce" data-baji="3" title="Clear Baji 3">
+                ⟲
               </button>
             </div>
           </div>
 
           <!-- Baji 4 Card -->
-          <div id="round-card-4" class="bg-brand-card p-3 rounded-xl border border-brand-border flex flex-col justify-between space-y-2">
+          <div id="round-card-4" class="bg-brand-card p-3 rounded-xl border border-brand-border flex flex-col justify-between space-y-2 transition-all duration-300">
             <div class="flex items-center justify-between">
               <span class="text-[11px] font-bold text-white font-mono">Baji 4 (03:00)</span>
               <span id="badge-status-4" class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">PENDING</span>
             </div>
-            <div class="text-xs text-slate-300 font-mono" id="label-result-4">Result: Waiting...</div>
-            <div class="flex gap-1.5 pt-1">
-              <button type="button" class="btn-quick-win flex-1 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition touch-bounce shadow" data-baji="4">
+            <!-- Inline Live Inputs -->
+            <div class="grid grid-cols-2 gap-1.5 pt-0.5">
+              <div>
+                <span class="text-[8px] font-mono text-slate-400 block mb-0.5">PATTI</span>
+                <input type="text" maxlength="3" id="input-live-patti-4" data-baji="4" placeholder="Patti" class="input-live-patti w-full bg-brand-surface border border-brand-border rounded-lg px-1.5 py-1 text-center font-mono text-xs text-white placeholder-slate-600 focus:outline-none focus:border-brand-accent">
+              </div>
+              <div>
+                <span class="text-[8px] font-mono text-slate-400 block mb-0.5">SINGLE</span>
+                <input type="text" maxlength="1" id="input-live-single-4" data-baji="4" placeholder="Single" class="input-live-single w-full bg-brand-surface border border-brand-border rounded-lg px-1.5 py-1 text-center font-mono text-xs font-bold text-brand-accent placeholder-slate-600 focus:outline-none focus:border-brand-accent">
+              </div>
+            </div>
+            <div class="text-[11px] text-slate-300 font-mono text-center py-0.5 truncate" id="label-result-4">Result: Waiting...</div>
+            <div class="flex gap-1 pt-0.5">
+              <button type="button" class="btn-quick-win flex-1 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] transition touch-bounce shadow" data-baji="4">
                 ✓ Win
               </button>
-              <button type="button" class="btn-quick-miss flex-1 py-1.5 rounded-lg bg-brand-surface hover:bg-slate-700 text-slate-400 hover:text-white text-xs font-semibold border border-brand-border transition touch-bounce" data-baji="4">
+              <button type="button" class="btn-quick-miss flex-1 py-1 rounded-lg bg-brand-surface hover:bg-slate-700 text-slate-300 hover:text-white text-[11px] font-semibold border border-brand-border transition touch-bounce" data-baji="4">
                 ✗ Miss
+              </button>
+              <button type="button" class="btn-quick-clear px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-rose-400 text-[11px] font-semibold border border-brand-border transition touch-bounce" data-baji="4" title="Clear Baji 4">
+                ⟲
               </button>
             </div>
           </div>
         </div>
 
-        <!-- 1-Click Single Digit Auto-Checker -->
+        <!-- 1-Click Single Digit Auto-Checker & Reset Bar -->
         <div class="bg-brand-card/70 p-3 rounded-xl border border-brand-border/70 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-          <span class="text-xs text-slate-300 font-medium">
-            <span class="text-amber-400">⚡</span> Or Tap Drawn Single Digit:
-          </span>
+          <div class="flex items-center justify-between sm:justify-start gap-3">
+            <span class="text-xs text-slate-300 font-medium flex items-center gap-1.5">
+              <span class="text-amber-400">⚡</span> Quick Select Drawn Digit:
+            </span>
+            <button type="button" id="btn-reset-today-rounds" class="px-2.5 py-1 rounded-lg bg-rose-950/60 hover:bg-rose-900 text-rose-300 border border-rose-500/30 text-[10px] font-mono font-bold transition touch-bounce">
+              ⟲ Reset All 4 Bajis
+            </button>
+          </div>
           <div class="grid grid-cols-10 gap-1 sm:gap-1.5 shrink-0" id="quick-drawn-digits">
             <!-- 0 through 9 generated in JS -->
           </div>
@@ -302,16 +363,18 @@
       </div>
 
       <!-- IN-PAGE VICTORY ALERT (TRIGGERED ON PASS) -->
-      <div id="win-banner" class="hidden bg-gradient-to-r from-emerald-950/90 to-teal-950/90 border-2 border-emerald-400/80 rounded-2xl p-4 sm:p-5 text-center space-y-2.5 shadow-2xl animate-fade-in">
+      <div id="win-banner" class="hidden bg-gradient-to-r from-emerald-950/95 to-teal-950/95 border-2 border-emerald-400 rounded-2xl p-4 sm:p-5 text-center space-y-2.5 shadow-2xl animate-fade-in">
         <div class="text-2xl sm:text-3xl font-extrabold text-white flex items-center justify-center gap-2">
-          <span>🎉</span> WIN CONFIRMED! STOP PLAYING!
+          <span>🎉</span> <span id="win-banner-title">WIN CONFIRMED! STOP PLAYING!</span>
         </div>
-        <p class="text-xs sm:text-sm text-emerald-200 max-w-xl mx-auto leading-relaxed font-medium">
+        <p id="win-banner-desc" class="text-xs sm:text-sm text-emerald-200 max-w-xl mx-auto leading-relaxed font-medium">
           Target digit hit! Strictly follow the <span class="text-white font-bold underline">"Stop on Win" rule</span>. Bank your net profit and exit the market for the day.
         </p>
-        <button id="btn-reset-win" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition shadow-md touch-bounce">
-          Dismiss &amp; Reset for Next Session
-        </button>
+        <div class="flex items-center justify-center gap-3 pt-1">
+          <button id="btn-reset-win" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition shadow-md touch-bounce">
+            Dismiss &amp; Keep Profit Locked
+          </button>
+        </div>
       </div>
 
       <!-- MARTINGALE INVESTMENT CALCULATOR (2X / 3X) -->
@@ -852,6 +915,9 @@
       if (cpEl) cpEl.innerText = 'Cycle Patti (CP): ' + cyclePatti;
 
       container.innerHTML = '';
+      if (typeof syncTodayBajiState === 'function') {
+        syncTodayBajiState();
+      }
       digits.forEach((digit, idx) => {
         const pattis = bestPattis[digit] || ['123', '456', '789', '000'];
         const card = document.createElement('div');
@@ -948,7 +1014,10 @@
       });
     }
 
-    // AUDIO & WIN STATE
+    
+    // ==========================================================================
+    // AUDIO, LIVE ROUND TRACKER & TWO-WAY STATE SYNCHRONIZATION
+    // ==========================================================================
     function playWinSound() {
       if (!AppState.soundEnabled) return;
       try {
@@ -977,18 +1046,277 @@
       showToast(AppState.soundEnabled ? 'Sound enabled' : 'Sound muted');
     });
 
-    function triggerWinState(baji) {
+    function triggerWinState(baji, single, patti) {
       playWinSound();
       const banner = document.getElementById('win-banner');
+      const title = document.getElementById('win-banner-title');
+      const desc = document.getElementById('win-banner-desc');
+      
+      if (title) title.innerText = `WIN CONFIRMED IN BAJI ${baji}!`;
+      if (desc) {
+        const matrix = DOW_MATRIX[AppState.currentDow] || DOW_MATRIX[1];
+        const targets = matrix[AppState.prevB8] || [1, 2, 4, 9];
+        desc.innerHTML = `Target digit <span class="text-white font-bold font-mono text-base bg-emerald-800/80 px-2 py-0.5 rounded border border-emerald-400">${single}</span> ${patti ? '(Patti ' + patti + ')' : ''} directly hit today's targets <span class="font-mono font-bold text-white">[${targets.join(', ')}]</span> in Round ${baji}!<br><span class="text-white font-bold underline">Stop on Win rule active:</span> Bank your net profit and exit the market for the day.`;
+      }
       banner.classList.remove('hidden');
       banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      showToast(`🎯 Win confirmed in Baji ${baji}! Stop playing and lock your profit.`);
+      showToast(`🎯 Win confirmed in Baji ${baji} (Digit: ${single})! Stop playing.`);
     }
 
     function resetWinState() {
       document.getElementById('win-banner').classList.add('hidden');
     }
     document.getElementById('btn-reset-win').addEventListener('click', resetWinState);
+
+    // LIVE ROUND TRACKER (TAB 1 <-> TAB 2 REAL-TIME TWO-WAY SYNC)
+    function initQuickRoundTracker() {
+      // 1. Initialize todayResults if empty
+      if (!AppState.todayResults) {
+        try {
+          const saved = localStorage.getItem('kolkata_ff_today_results');
+          if (saved) AppState.todayResults = JSON.parse(saved);
+        } catch(e) {}
+      }
+
+      // Default to user-reported live session results (B1: 370-0, B2: 9) if not initialized
+      if (!AppState.todayResults || !Array.isArray(AppState.todayResults) || AppState.todayResults.length !== 4) {
+        AppState.todayResults = [
+          { baji: 1, patti: '370', single: '0' },
+          { baji: 2, patti: '', single: '9' },
+          { baji: 3, patti: '', single: '' },
+          { baji: 4, patti: '', single: '' }
+        ];
+      }
+
+      // 2. Render Quick Drawn Digits Bar (0-9)
+      const quickDigitsContainer = document.getElementById('quick-drawn-digits');
+      if (quickDigitsContainer) {
+        quickDigitsContainer.innerHTML = '';
+        for (let d = 0; d <= 9; d++) {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-brand-surface hover:bg-brand-accent hover:text-brand-bg text-white font-mono font-bold text-xs border border-brand-border transition touch-bounce flex items-center justify-center';
+          btn.innerText = d;
+          btn.addEventListener('click', () => {
+            applyQuickDrawnDigit(d);
+          });
+          quickDigitsContainer.appendChild(btn);
+        }
+      }
+
+      // 3. Attach Listeners to Live Inputs on Tab 1
+      for (let b = 1; b <= 4; b++) {
+        const pInput = document.getElementById(`input-live-patti-${b}`);
+        const sInput = document.getElementById(`input-live-single-${b}`);
+
+        if (pInput) {
+          pInput.addEventListener('input', (e) => {
+            const val = e.target.value.trim();
+            AppState.todayResults[b - 1].patti = val;
+            if (val.length === 3 && /^\d{3}$/.test(val)) {
+              const sum = parseInt(val[0], 10) + parseInt(val[1], 10) + parseInt(val[2], 10);
+              const autoSingle = String(sum % 10);
+              AppState.todayResults[b - 1].single = autoSingle;
+              if (sInput) sInput.value = autoSingle;
+            }
+            syncTodayBajiState();
+          });
+        }
+
+        if (sInput) {
+          sInput.addEventListener('input', (e) => {
+            AppState.todayResults[b - 1].single = e.target.value.trim();
+            syncTodayBajiState();
+          });
+        }
+      }
+
+      // 4. Quick Action Buttons (Win / Miss / Clear)
+      document.querySelectorAll('.btn-quick-win').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const baji = parseInt(e.currentTarget.getAttribute('data-baji'), 10);
+          const matrix = DOW_MATRIX[AppState.currentDow] || DOW_MATRIX[1];
+          const targets = matrix[AppState.prevB8] || [1, 2, 4, 9];
+          
+          let curSingle = AppState.todayResults[baji - 1].single;
+          if (!curSingle || !targets.includes(Number(curSingle))) {
+            AppState.todayResults[baji - 1].single = String(targets[0]);
+          }
+          syncTodayBajiState(true);
+        });
+      });
+
+      document.querySelectorAll('.btn-quick-miss').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const baji = parseInt(e.currentTarget.getAttribute('data-baji'), 10);
+          const matrix = DOW_MATRIX[AppState.currentDow] || DOW_MATRIX[1];
+          const targets = matrix[AppState.prevB8] || [1, 2, 4, 9];
+
+          let curSingle = AppState.todayResults[baji - 1].single;
+          if (!curSingle || targets.includes(Number(curSingle))) {
+            // Pick a non-target digit
+            const nonTarget = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].find(n => !targets.includes(n));
+            AppState.todayResults[baji - 1].single = String(nonTarget !== undefined ? nonTarget : 0);
+          }
+          syncTodayBajiState();
+        });
+      });
+
+      document.querySelectorAll('.btn-quick-clear').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const baji = parseInt(e.currentTarget.getAttribute('data-baji'), 10);
+          AppState.todayResults[baji - 1].patti = '';
+          AppState.todayResults[baji - 1].single = '';
+          syncTodayBajiState();
+          showToast(`Baji ${baji} cleared`);
+        });
+      });
+
+      const btnResetToday = document.getElementById('btn-reset-today-rounds');
+      if (btnResetToday) {
+        btnResetToday.addEventListener('click', () => {
+          AppState.todayResults = [
+            { baji: 1, patti: '', single: '' },
+            { baji: 2, patti: '', single: '' },
+            { baji: 3, patti: '', single: '' },
+            { baji: 4, patti: '', single: '' }
+          ];
+          resetWinState();
+          syncTodayBajiState();
+          showToast('All 4 bajis reset for today');
+        });
+      }
+
+      // Initial Sync
+      syncTodayBajiState(false);
+    }
+
+    // Apply quick drawn digit to earliest unfilled round
+    function applyQuickDrawnDigit(digit) {
+      let targetBaji = 1;
+      for (let b = 1; b <= 4; b++) {
+        const item = AppState.todayResults[b - 1];
+        if (!item.single && item.single !== '0') {
+          targetBaji = b;
+          break;
+        }
+      }
+      AppState.todayResults[targetBaji - 1].single = String(digit);
+      syncTodayBajiState(true);
+      showToast(`Drawn digit ${digit} set for Baji ${targetBaji}`);
+    }
+
+    // CORE EVALUATION & TWO-WAY SYNCHRONIZATION FUNCTION
+    function syncTodayBajiState(userActionTriggered = false) {
+      const matrix = DOW_MATRIX[AppState.currentDow] || DOW_MATRIX[1];
+      const targetDigits = matrix[AppState.prevB8] || [1, 2, 4, 9];
+
+      let hasWon = false;
+      let winningBaji = null;
+      let winningSingle = null;
+      let winningPatti = null;
+
+      for (let b = 1; b <= 4; b++) {
+        const item = AppState.todayResults[b - 1];
+        const card = document.getElementById(`round-card-${b}`);
+        const badge = document.getElementById(`badge-status-${b}`);
+        const label = document.getElementById(`label-result-${b}`);
+        const pLive = document.getElementById(`input-live-patti-${b}`);
+        const sLive = document.getElementById(`input-live-single-${b}`);
+        const pForm = document.getElementById(`input-patti-${b}`);
+        const sForm = document.getElementById(`input-single-${b}`);
+
+        // Auto single calculation from patti if single is empty
+        if (item.patti && item.patti.length === 3 && /^\d{3}$/.test(item.patti) && (!item.single && item.single !== '0')) {
+          item.single = String((parseInt(item.patti[0], 10) + parseInt(item.patti[1], 10) + parseInt(item.patti[2], 10)) % 10);
+        }
+
+        // Update inputs
+        if (pLive && pLive.value !== (item.patti || '')) pLive.value = item.patti || '';
+        if (sLive && sLive.value !== (item.single || '')) sLive.value = item.single || '';
+        if (pForm && pForm.value !== (item.patti || '')) pForm.value = item.patti || '';
+        if (sForm && sForm.value !== (item.single || '')) sForm.value = item.single || '';
+
+        // Reset base card styling
+        if (card) {
+          card.className = 'bg-brand-card p-3 rounded-xl border flex flex-col justify-between space-y-2 transition-all duration-300';
+        }
+
+        const singleNum = (item.single !== '' && item.single !== undefined && item.single !== null) ? Number(item.single) : null;
+
+        if (hasWon) {
+          // If a previous round already won today
+          if (badge) {
+            badge.innerText = 'LOCKED';
+            badge.className = 'text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-500 border border-slate-700';
+          }
+          if (label) label.innerHTML = '<span class="text-slate-500 font-mono text-[10px]">Market Closed (Won)</span>';
+          if (card) card.classList.add('border-brand-border/40', 'opacity-50');
+        } else if (singleNum !== null && !isNaN(singleNum)) {
+          // User has entered a single digit
+          const isHit = targetDigits.includes(singleNum);
+          if (isHit) {
+            hasWon = true;
+            winningBaji = b;
+            winningSingle = item.single;
+            winningPatti = item.patti;
+
+            if (badge) {
+              badge.innerText = `PASSED ✓ (${item.single})`;
+              badge.className = 'text-[9px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-500 text-brand-bg shadow-sm shadow-emerald-500/50';
+            }
+            if (label) {
+              label.innerHTML = `<span class="text-emerald-400 font-bold font-mono text-xs">Hit: ${item.patti ? item.patti + '-' : ''}${item.single} ✓</span>`;
+            }
+            if (card) {
+              card.classList.add('border-2', 'border-emerald-500', 'bg-emerald-950/25', 'shadow-lg', 'shadow-emerald-500/10');
+            }
+          } else {
+            // Missed this round
+            if (badge) {
+              badge.innerText = `MISSED ✗ (${item.single})`;
+              badge.className = 'text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-500/40';
+            }
+            if (label) {
+              label.innerHTML = `<span class="text-rose-400 font-mono text-xs">Miss: ${item.patti ? item.patti + '-' : ''}${item.single} ✗</span>`;
+            }
+            if (card) {
+              card.classList.add('border-rose-900/40', 'bg-brand-card/75');
+            }
+          }
+        } else {
+          // Single is waiting / pending
+          if (badge) {
+            badge.innerText = 'PENDING';
+            badge.className = 'text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700';
+          }
+          if (label) label.innerText = 'Result: Waiting...';
+          if (card) card.classList.add('border-brand-border');
+        }
+      }
+
+      // Handle Victory Banner state
+      const banner = document.getElementById('win-banner');
+      if (hasWon) {
+        if (banner) {
+          const title = document.getElementById('win-banner-title');
+          const desc = document.getElementById('win-banner-desc');
+          if (title) title.innerText = `WIN CONFIRMED IN BAJI ${winningBaji}!`;
+          if (desc) {
+            desc.innerHTML = `Target digit <span class="text-white font-bold font-mono text-base bg-emerald-800/80 px-2 py-0.5 rounded border border-emerald-400">${winningSingle}</span> ${winningPatti ? '(Patti ' + winningPatti + ')' : ''} hit today's targets <span class="font-mono font-bold text-white">[${targetDigits.join(', ')}]</span> in Round ${winningBaji}!<br><span class="text-white font-bold underline">Stop on Win rule active:</span> Bank your net profit and exit the market for the day.`;
+          }
+          banner.classList.remove('hidden');
+          if (userActionTriggered) playWinSound();
+        }
+      } else {
+        if (banner) banner.classList.add('hidden');
+      }
+
+      // Persist to LocalStorage
+      try {
+        localStorage.setItem('kolkata_ff_today_results', JSON.stringify(AppState.todayResults));
+      } catch(e) {}
+    }
 
     // DAILY ENTRY FORM (8 Bajis)
     function initBajiFormInputs() {
@@ -1011,6 +1339,17 @@
           if (val.length === 3 && /^\d{3}$/.test(val)) {
             const sum = parseInt(val[0], 10) + parseInt(val[1], 10) + parseInt(val[2], 10);
             sInput.value = sum % 10;
+          }
+          if (i <= 4) {
+            AppState.todayResults[i - 1].patti = val;
+            AppState.todayResults[i - 1].single = sInput.value;
+            syncTodayBajiState();
+          }
+        });
+        sInput.addEventListener('input', (e) => {
+          if (i <= 4) {
+            AppState.todayResults[i - 1].single = e.target.value.trim();
+            syncTodayBajiState();
           }
         });
       }
@@ -1041,7 +1380,12 @@
         const p = document.getElementById(`input-patti-${i}`).value.trim();
         const s = document.getElementById(`input-single-${i}`).value.trim();
         results.push({ baji: i, patti: p, single: s });
+        if (i <= 4) {
+          AppState.todayResults[i - 1].patti = p;
+          AppState.todayResults[i - 1].single = s;
+        }
       }
+      syncTodayBajiState(true);
 
       const newEntry = {
         date: `${dowVal} ${dateVal.split('-')[2]}/${dateVal.split('-')[1]}`,
